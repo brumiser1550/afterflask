@@ -31,6 +31,7 @@ DJANGO_APPS = (
     'django.contrib.admin',
 )
 THIRD_PARTY_APPS = (
+    'registration',
 )
 
 # Apps specific for this project go here.

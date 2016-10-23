@@ -1,3 +1,7 @@
-from django.shortcuts import render
+from django.views import generic
+from django.shortcuts import get_object_or_404
+from . import models
 
-# Create your views here.
+
+class MainView(generic.TemplateView):
+    template_name = "clean/home.html"

@@ -20,17 +20,12 @@ class Contact(models.Model):
     email = models.EmailField()
 
 
+class FeedbackLevel(models.Model):
+    title = models.CharField(max_length=140)
+    value = models.IntegerField()
+
+
 class Feedback(models.Model):
     job = models.ForeignKey(Job)
     tech = models.ForeignKey(Technician)
-
-
-# Questions
-# 1 - Feedback has a FK to Rating.  There is no Rating on the paper.  Should this be feedback level?
-# Are these just choices for feedback?  Do they need to be a table or can they
-# be choices hard coded into the model/field?
-# 2 - what are the permissions/permission levels for?  Is this meant to control
-# who can see something or who can edit something?  If so we might use the django
-# permission system?
-# 3 - What is the JobID on Job?  How is it different from the regular ID?  is this
-# just like a job name entered by the company or does it need to be some other kind of ID system?
+    level = models.ForeignKey(FeedbackLevel)

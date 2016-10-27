@@ -19,10 +19,14 @@ from django.conf import settings
 import django.contrib.auth.views as auth
 from django.core.urlresolvers import reverse_lazy
 from django.contrib.auth.decorators import login_required
+from afterflask import views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'', include('clean.urls', namespace='clean')),
+    url(r'^login/$', views.LoginView.as_view(), name='auth_login'),
+    url(r'^register/$', views.RegisterView.as_view(), name='registration_register'),
+    url(r'^forgot/$', views.ForgotView.as_view(), name='auth_password_reset'),
     url(r'', include('registration.backends.simple.urls')),
 ]
 

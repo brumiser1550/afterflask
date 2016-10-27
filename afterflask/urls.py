@@ -16,10 +16,14 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.conf import settings
+import django.contrib.auth.views as auth
+from django.core.urlresolvers import reverse_lazy
+from django.contrib.auth.decorators import login_required
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'', include('clean.urls', namespace='clean'))
+    url(r'', include('clean.urls', namespace='clean')),
+    url(r'', include('registration.backends.simple.urls')),
 ]
 
 if settings.DEBUG:

@@ -27,20 +27,17 @@
   <!-- /favicons -->
   {% block header_script %}{% endblock %}
 
-{#  <script>#}
-{#    var messages = [];#}
-{#    {% with messages = get_flashed_messages() %}#}
-{#      {% if messages %}#}
-{##}
-{#        {% for message in messages %}#}
-{#        messages.push({#}
-{#            type: 'danger',#}
-{#            msg: '{{ message }}'#}
-{#        })#}
-{#        {% endfor %}#}
-{#      {% endif %}#}
-{#    {% endwith %}#}
-{#  </script>#}
+  <script>
+    var messages = [];
+    {% if messages %}
+        {% for message in messages %}
+            messages.push({
+                type: 'danger',
+                msg: '{{ message }}'
+            });
+        {% endfor %}
+    {% endif %}
+  </script>
   <style>
     .block {
         display: block;

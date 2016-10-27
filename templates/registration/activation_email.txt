@@ -1,0 +1,6 @@
+{{ user.username }} thanks for registering with {{ site.name }}
+
+This account must be verified within {{ expiration_days }} days.
+
+Please activate your account with in that time.
+http://www.theyburied.us/accounts/activate/{{ activation_key }}

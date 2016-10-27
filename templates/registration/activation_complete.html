@@ -1,0 +1,11 @@
+{% extends 'base.html'  %}
+
+{% block content %}
+
+    <div class="shadowContainer">
+        <h1>Your account has been activated.</h1>
+        <p>You may now login and finish creating your account or join an existing account.</p>
+        <p><a role="button" href="{% url "auth_login" %}" class="btn btn-lg btn-success">Lgogin</a></p>
+    </div>
+
+{% endblock %}

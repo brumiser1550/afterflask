@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% block title %}Login{% endblock %}
+{% block content %}
+    <div class="container">
+        {{ form.errors }}
+        <div class="row">
+            <div class="col-md-12 white text-center">
+                <h2>Welcome to the Review Portal</h2>
+            </div>
+            <div class="col-md-6 col-md-push-3">
+                <uib-tabset active="{{ active }}" justified="true" class="loginTabs">
+                    <uib-tab index="0" heading="Login">
+                        <form id="login-form" class="" method="post" action="{% url 'auth_login' %}">{% csrf_token %}
+                            <div class="form-group">
+                                <input type="email" name="email" id="email" tabindex="1" class="form-control"
+                                       placeholder="Email Address" value="" required/>
+                            </div>
+                            <div class="form-group">
+                                <input type="password" name="password" id="password" class="form-control"
+                                       placeholder="Password" required/>
+                            </div>
+                            <div class="form-group text-center">
+                                <input type="checkbox" tabindex="3" class="" name="remember" id="remember"/>
+                                <label for="remember"> Remember Me</label>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-6 col-sm-offset-3">
+                                        <input type="submit" name="login-submit" id="login-submit" tabindex="4"
+                                               class="form-control btn btn-success" value="Log In">
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </uib-tab>
+                    <uib-tab index="1" heading="Register">
+                        <form id="register-form" action="{% url 'registration_register' %}" method="post"
+                              role="form">{% csrf_token %}
+                            <div class="form-group">
+                                <input type="email" name="email" id="email" tabindex="1" class="form-control"
+                                       placeholder="Email Address" value="" required/>
+                            </div>
+                            <div class="form-group">
+                                <input type="password" name="password1" id="password" tabindex="2" class="form-control"
+                                       placeholder="Password" required/>
+                            </div>
+                            <div class="form-group">
+                                <input type="password" name="password2" id="confirm-password" tabindex="2"
+                                       class="form-control" placeholder="Confirm Password" required/>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-6 col-sm-offset-3">
+                                        <input type="submit" name="register-submit" id="register-submit" tabindex="4"
+                                               class="form-control btn btn-success" value="Register Now"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </uib-tab>
+
+                    <uib-tab index="2" heading="Forgot">
+                        <form id="register-form" action="{% url 'auth_password_reset' %}" method="post"
+                              role="form">{% csrf_token %}
+                            <div class="form-group">
+                                <input type="email" name="email" id="email" tabindex="1" class="form-control"
+                                       placeholder="Email Address" value="" required>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-6 col-sm-offset-3">
+                                        <input type="submit" name="register-submit" id="register-submit" tabindex="4"
+                                               class="form-control btn btn-success" value="Register Now">
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </uib-tab>
+                </uib-tabset>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

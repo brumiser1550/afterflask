@@ -23,6 +23,7 @@ from afterflask import views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^api/v1/', include('clean.api.urls', namespace='api_clean')),
     url(r'', include('clean.urls', namespace='clean')),
     url(r'^login/$', views.LoginView.as_view(), name='auth_login'),
     url(r'^register/$', views.RegisterView.as_view(), name='registration_register'),

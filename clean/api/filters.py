@@ -15,4 +15,4 @@ class JobFilter(django_filters.FilterSet):
 
     class Meta:
         model = models.Job
-        fields = ['scheduled', 'completed']
+        fields = ['scheduled', 'completed', 'job_id']

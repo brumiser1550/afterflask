@@ -7,4 +7,4 @@ class JobSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Job
-        fields = ('scheduled', 'completed', 'id')
+        fields = ('scheduled', 'completed', 'id', 'job_id')

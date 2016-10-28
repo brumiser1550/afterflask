@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 class Job(models.Model):
     scheduled = models.DateTimeField()
     completed = models.DateTimeField()
+    job_id = models.IntegerField()
 
 
 class Technician(models.Model):

@@ -1,147 +1,156 @@
 <!doctype html>
 <html lang="en" ng-app="reviewsApp">
 <head>
-  <meta charset="UTF-8" />
-  <title>Phoenix Coding | {% block title %}{% endblock %}</title>
+    <meta charset="UTF-8"/>
+    <title>Phoenix Coding | {% block title %}{% endblock %}</title>
 
-  <!-- meta -->
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="" />
-  <meta name="keywords" content="" />
-  <meta name="author" content="Brandon Rumiser - Phoenix Coding" />
-  <meta name="theme-color" content="#F54311">
-  <meta name="msapplication-navbutton-color" content="#F54311">
-  <meta name="apple-mobile-web-app-status-bar-style" content="#F54311">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <!-- /meta -->
+    <!-- meta -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+    <meta name="author" content="Brandon Rumiser - Phoenix Coding"/>
+    <meta name="theme-color" content="#F54311">
+    <meta name="msapplication-navbutton-color" content="#F54311">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#F54311">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <!-- /meta -->
 
-  <!-- favicons -->
-  <link rel="shortcut icon" href="/static/ico/favicon.png">
-  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/static/ico/apple-touch-icon-144-precomposed.png">
-  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/static/ico/apple-touch-icon-114-precomposed.png">
-  <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/static/ico/apple-touch-icon-72-precomposed.png">
-  <link rel="apple-touch-icon-precomposed" href="/static/ico/apple-touch-icon-57-precomposed.png">
-  <link rel="shortcut icon" href="/static/ico/favicon.png">
-  <!-- /favicons -->
-  {% block header_script %}{% endblock %}
+    <!-- favicons -->
+    <link rel="shortcut icon" href="/static/ico/favicon.png">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/static/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/static/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/static/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="/static/ico/apple-touch-icon-57-precomposed.png">
+    <link rel="shortcut icon" href="/static/ico/favicon.png">
+    <!-- /favicons -->
+    {% block header_script %}{% endblock %}
 
-  <script>
-    var messages = [];
-    {% if messages %}
-        {% for message in messages %}
-            messages.push({
-                type: 'danger',
-                msg: '{{ message }}'
-            });
-        {% endfor %}
-    {% endif %}
-  </script>
-  <style>
-    .block {
-        display: block;
-        position: absolute;
-        background: rgba(255,255,255,1);
-        z-index: 99999;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-    }
-  </style>
+    <script>
+        var messages = [];
+        {% if messages %}
+            {% for message in messages %}
+                messages.push({
+                    type: 'danger',
+                    msg: '{{ message }}'
+                });
+            {% endfor %}
+        {% endif %}
+    </script>
+    <style>
+        .block {
+            display: block;
+            position: absolute;
+            background: rgba(255, 255, 255, 1);
+            z-index: 99999;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
 </head>
 
-<body ng-controller="reviewsController" >
+<body ng-controller="reviewsController">
 
-  {% block header %}
-  <!-- Wrap all page content here -->
-  <div id="wrap">
+{% block header %}
+    <!-- Wrap all page content here -->
+    <div id="wrap">
 
     <!-- Fixed navbar -->
     <div class="navbar navbar-default navbar-fixed-top">
-      <div class="container">
-    		<div class="navbar-header">
-    			<button type="button" class="navbar-toggle" ng-click="isNavCollapsed = !isNavCollapsed">
-    				<span class="sr-only">Toggle navigation</span>
-    				<span class="icon-bar"></span>
-    				<span class="icon-bar"></span>
-    				<span class="icon-bar"></span>
-    			</button>
-    			<a class="navbar-brand" href="#">Phoenix Coding</a>
-    		</div>
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" ng-click="isNavCollapsed = !isNavCollapsed">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="{% url 'clean:home' %}">Phoenix Coding</a>
+            </div>
 
-        <div class="collapse navbar-collapse" uib-collapse="isNavCollapsed">
-          <ul class="nav navbar-nav">
-{#            <li {% if request.endpoint=='home' %} class="active" {% endif %}><a href="{{ url_for('home') }}">Home</a></li>#}
-            <li class="dropdown" uib-dropdown>
-              <a class="dropdown-toggle" uib-dropdown-toggle>Dropdown <b class="caret"></b></a>
-              <ul class="dropdown-menu" uib-dropdown-menu role="menu">
-                <li><a>Action</a></li>
-                <li><a>Another action</a></li>
-                <li><a>Something else here</a></li>
-                <li class="divider"></li>
-                <li class="dropdown-header">Nav header</li>
-                <li><a>Separated link</a></li>
-                <li><a>One more separated link</a></li>
-              </ul>
-            </li>
-          </ul>
-          <ul class="nav navbar-nav navbar-right">
-{#            <li><a href="{{ url_for('register') }}">Signup</a></li>#}
-{#            <li><a href="{{ url_for('login') }}">Login</a></li>#}
-          </ul>
+            <div class="collapse navbar-collapse" uib-collapse="isNavCollapsed">
+                <ul class="nav navbar-nav">
+                    <li {% if request.path == "/" %} class="active" {% endif %}>
+                        <a href="{% url 'clean:home' %}">Home</a>
+                    </li>
+                    <li class="dropdown {% if "technicians" in request.path or "jobs" in request.path %} active {% endif %}" uib-dropdown>
+                        <a class="dropdown-toggle" uib-dropdown-toggle>Reports <b class="caret"></b></a>
+                        <ul class="dropdown-menu" uib-dropdown-menu role="menu">
+                            <li {% if "technicians" in request.path %} class="active" {% endif %}><a href="{% url 'clean:technicians' %}">Technicians</a></li>
+                            <li {% if "jobs" in request.path %} class="active" {% endif %}><a href="{% url 'clean:jobs' %}">Jobs</a></li>
+                            <li {% if "feedback" in request.path %} class="active" {% endif %}><a href="{% url 'clean:feedbacks' %}">Feedback</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    {% if user.is_staff %}
+                        <li><a href="{% url 'admin:login' %}">Admin</a></li>
+                    {% endif %}
+                    {% if user.is_authenticated %}
+                        <li {% if "login" in request.path or "logout" in request.path %} class="active" {% endif %}>
+                            <a href="{% url 'auth_logout' %}">Logout</a>
+                        </li>
+                    {% else %}
+                        <li {% if "login" in request.path or "logout" in request.path %} class="active" {% endif %}>
+                            <a href="{% url 'auth_login' %}">Login</a>
+                        </li>
+                    {% endif %}
+
+                </ul>
+            </div>
+            <!--/.nav-collapse -->
         </div>
-        <!--/.nav-collapse -->
-      </div>
     </div>
+{% endblock %}
+
+
+<!-- Begin page content -->
+<main id="content" role="main">
+    {% block messages %}
+        <div class="container alerts" ng-show="alerts != ''">
+            {#        <div uib-alert ng-repeat="alert in alerts" ng-class="'alert-' + (alert.type || 'warning')" close="closeAlert($index)">{{'{{alert.msg}}'}}</div>#}
+        </div>
     {% endblock %}
 
-
-    <!-- Begin page content -->
-    <main id="content" role="main">
-      {% block messages %}
-      <div class="container alerts" ng-show="alerts != ''">
-{#        <div uib-alert ng-repeat="alert in alerts" ng-class="'alert-' + (alert.type || 'warning')" close="closeAlert($index)">{{'{{alert.msg}}'}}</div>#}
-      </div>
-      {% endblock %}
-
-      {% block content %}{% endblock %}
-    </main>
+    {% block content %}{% endblock %}
+</main>
 
 
-    {% block footer %}
+{% block footer %}
     <div class="container">
-      <div class="footer">
-        <footer>
-          <p>&copy; {% now "Y" %} Phoenix Coding, LLC.</p>
-        </footer>
-      </div>
+        <div class="footer">
+            <footer>
+                <p>&copy; {% now "Y" %} Phoenix Coding, LLC.</p>
+            </footer>
+        </div>
     </div>
-    {% endblock %}
+{% endblock %}
 
-  </div>
-  <div class="loaderContainer" ng-hide="loaded">
+</div>
+<div class="loaderContainer" ng-hide="loaded">
     <div class="loader">Loading...</div>
-  </div>
+</div>
 
 
-  <!-- styles -->
-  <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.css" rel="stylesheet">
-  <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap-theme.css" rel="stylesheet">
-  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-  <link type="text/css" rel="stylesheet" href="/static/css/main.css" />
-  <!-- /styles -->
+<!-- styles -->
+<link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.css" rel="stylesheet">
+<link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap-theme.css" rel="stylesheet">
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+<link type="text/css" rel="stylesheet" href="/static/css/main.css"/>
+<!-- /styles -->
 
-  <!--<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>-->
-  <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.8/angular.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.8/angular-animate.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.8/angular-touch.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/angular-strap/2.3.9/angular-strap.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.2.0/ui-bootstrap-tpls.min.js"></script>
-  <script src="/static/js/controller.js"></script>
-  <!--<script type="text/javascript" src="/static/js/script.js"></script>-->
-  {% block footer_script %}{% endblock %}
+<!--<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>-->
+<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.8/angular.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.8/angular-animate.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.8/angular-touch.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/angular-strap/2.3.9/angular-strap.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.2.0/ui-bootstrap-tpls.min.js"></script>
+<script src="/static/js/controller.js"></script>
+<!--<script type="text/javascript" src="/static/js/script.js"></script>-->
+{% block footer_script %}{% endblock %}
 
 </body>
 </html>

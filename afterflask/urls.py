@@ -28,7 +28,7 @@ urlpatterns = [
     url(r'^login/$', views.LoginView.as_view(), name='auth_login'),
     url(r'^register/$', views.RegisterView.as_view(), name='registration_register'),
     url(r'^forgot/$', views.ForgotView.as_view(), name='auth_password_reset'),
-    url(r'', include('registration.backends.simple.urls')),
+    url(r'^accounts/', include('registration.backends.simple.urls')),
 ]
 
 if settings.DEBUG:

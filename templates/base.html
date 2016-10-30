@@ -1,5 +1,6 @@
+{% load staticfiles %}
 <!doctype html>
-<html lang="en" ng-app="reviewsApp">
+<html lang="en" ng-app="cleanApp">
 <head>
     <meta charset="UTF-8"/>
     <title>Phoenix Coding | {% block title %}{% endblock %}</title>
@@ -25,7 +26,6 @@
     <link rel="apple-touch-icon-precomposed" href="/static/ico/apple-touch-icon-57-precomposed.png">
     <link rel="shortcut icon" href="/static/ico/favicon.png">
     <!-- /favicons -->
-    {% block header_script %}{% endblock %}
 
     <script>
         var messages = [];
@@ -33,8 +33,19 @@
             {% for message in messages %}
                 messages.push({
                     type: 'danger',
-                    msg: '{{ message }}'
+                    msg: "{{ message }}",
+                    timeout: 5000
                 });
+            {% endfor %}
+        {% endif %}
+        {% if form.errors.items %}
+            {% for field, errors in form.errors.items %}
+                {% for error in errors %}
+                    messages.push({
+                        type: 'danger',
+                        msg: "{{ field }}: {{ error }}"
+                    });
+                {% endfor %}
             {% endfor %}
         {% endif %}
     </script>
@@ -50,6 +61,8 @@
             height: 100%;
         }
     </style>
+    {% block header_script %}{% endblock %}
+
 </head>
 
 <body ng-controller="reviewsController">
@@ -111,7 +124,7 @@
 <main id="content" role="main">
     {% block messages %}
         <div class="container alerts" ng-show="alerts != ''">
-            {#        <div uib-alert ng-repeat="alert in alerts" ng-class="'alert-' + (alert.type || 'warning')" close="closeAlert($index)">{{'{{alert.msg}}'}}</div>#}
+            <div uib-alert ng-repeat="alert in alerts" ng-class="'alert-' + (alert.type || 'warning')"  dismiss-on-timeout="{$alert.timeout$}" close="closeAlert($index)">{$ alert.msg | filterHtmlChars $}</div>
         </div>
     {% endblock %}
 
@@ -148,9 +161,11 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.8/angular-touch.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/angular-strap/2.3.9/angular-strap.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.2.0/ui-bootstrap-tpls.min.js"></script>
-<script src="/static/js/controller.js"></script>
-<!--<script type="text/javascript" src="/static/js/script.js"></script>-->
-{% block footer_script %}{% endblock %}
+
+<script src="{% static 'js/app.js' %}"></script>
+<script src="{% static 'js/controller-base.js' %}"></script>
+{% block controllers %}{% endblock %}
+{% block footer_scripts %}{% endblock %}
 
 </body>
 </html>

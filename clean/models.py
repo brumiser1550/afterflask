@@ -26,7 +26,7 @@ class Job(models.Model):
     scheduled = models.DateTimeField()
     completed = models.DateTimeField()
     job_id = models.IntegerField()
-    contact = models.ForeignKey(Contact)
+    contact = models.ForeignKey(Contact, null=True)
 
     def __str__(self):
         return "Job {} - job_id: {} Scheduled: {}  Completed: {}".format(self.pk, self.job_id, self.scheduled, self.completed)

@@ -2,16 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-class Job(models.Model):
-    scheduled = models.DateTimeField()
-    completed = models.DateTimeField()
-    job_id = models.IntegerField()
-    contact = models.ForeignKey(Contact)
-
-    def __str__(self):
-        return "Job {} - job_id: {} Scheduled: {}  Completed: {}".format(self.pk, self.job_id, self.scheduled, self.completed)
-
-
 class Technician(models.Model):
     name = models.CharField(max_length=60)
     user = models.ForeignKey(User)
@@ -30,6 +20,16 @@ class Contact(models.Model):
 
     def __str__(self):
         return "Contact: {} {} - email: {}".format(self.name_first, self.name_last, self.user.email)
+
+
+class Job(models.Model):
+    scheduled = models.DateTimeField()
+    completed = models.DateTimeField()
+    job_id = models.IntegerField()
+    contact = models.ForeignKey(Contact)
+
+    def __str__(self):
+        return "Job {} - job_id: {} Scheduled: {}  Completed: {}".format(self.pk, self.job_id, self.scheduled, self.completed)
 
 
 class FeedbackLevel(models.Model):

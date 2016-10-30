@@ -11,11 +11,11 @@ class Technician(models.Model):
 
 
 class Contact(models.Model):
-    name_first = models.CharField(max_length=60)
-    name_last = models.CharField(max_length=60)
-    phone = models.CharField(max_length=12)
-    address = models.TextField(max_length=240)
-    email = models.EmailField()
+    name_first = models.CharField(max_length=60, null=True, blank=True)
+    name_last = models.CharField(max_length=60, null=True, blank=True )
+    phone = models.CharField(max_length=12, null=True, blank=True)
+    address = models.TextField(max_length=240, null=True, blank=True)
+    email = models.EmailField(null=True, blank=True)
     contact_id = models.IntegerField()
 
     def __str__(self):

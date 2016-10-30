@@ -24,17 +24,19 @@ class Migration(migrations.Migration):
             name='Contact',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name_first', models.CharField(max_length=60)),
-                ('name_last', models.CharField(max_length=60)),
-                ('phone', models.CharField(max_length=12)),
-                ('address', models.TextField(max_length=240)),
-                ('email', models.EmailField(max_length=254)),
+                ('name_first', models.CharField(max_length=60, null=True, blank=True)),
+                ('name_last', models.CharField(max_length=60, null=True, blank=True)),
+                ('phone', models.CharField(max_length=12, null=True, blank=True)),
+                ('address', models.TextField(max_length=240, null=True, blank=True)),
+                ('email', models.EmailField(max_length=254, null=True, blank=True)),
+                ('contact_id', models.IntegerField(default=None))
             ],
         ),
         migrations.CreateModel(
             name='Feedback',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('message', models.TextField(blank=True))
             ],
         ),
         migrations.CreateModel(
@@ -52,6 +54,8 @@ class Migration(migrations.Migration):
                 ('scheduled', models.DateTimeField()),
                 ('completed', models.DateTimeField()),
                 ('job_id', models.IntegerField()),
+                ('contact', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='clean.Contact'),)
+
             ],
         ),
         migrations.CreateModel(

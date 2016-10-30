@@ -17,11 +17,25 @@ data = [Row(*row.strip().split(',')) for row in f.readlines()
         if len(row.strip().split(',')) == 13]
 f.close()
 
-jobs = [(int(row.job_id), datetime.strptime(row.job_scheduled, '%m/%d/%Y'))
+contacts = list(set([row.contact_id for row in data[1:]
+            if row.job_id.isnumeric()
+            and row.contact_id.isnumeric()]))
+
+for contact in contacts:
+    new_contact = models.Contact(contact_id=contact)
+    new_contact.save()
+
+jobs = [(int(row.job_id),
+         datetime.strptime(row.job_scheduled, '%m/%d/%Y'),
+         int(row.contact_id))
         for row in data[1:] if row.job_id.isnumeric()]
 
 for job in jobs:
-    new_job = models.Job(job_id=job[0], scheduled=job[1], completed=job[1])
+    contact = models.Contact.objects.filter(contact_id=job[2]).first()
+    new_job = models.Job(job_id=job[0],
+                         scheduled=job[1],
+                         completed=job[1],
+                         contact=contact)
     new_job.save()
 
 techs =list(set([tech for row in data[1:]
@@ -49,4 +63,5 @@ for row in data[1:]:
                 tech = models.Technician.objects.filter(name=tech).first()
                 new_feedback = models.Feedback(job=job,
                                                tech=tech,
-                                               level=feedback_score).save()
+                                               level=feedback_score,
+                                               message=row.feedback_comment).save()

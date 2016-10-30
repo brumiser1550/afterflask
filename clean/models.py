@@ -6,6 +6,7 @@ class Job(models.Model):
     scheduled = models.DateTimeField()
     completed = models.DateTimeField()
     job_id = models.IntegerField()
+    contact = models.ForeignKey(Contact)
 
     def __str__(self):
         return "Job {} - job_id: {} Scheduled: {}  Completed: {}".format(self.pk, self.job_id, self.scheduled, self.completed)
@@ -25,6 +26,7 @@ class Contact(models.Model):
     phone = models.CharField(max_length=12)
     address = models.TextField(max_length=240)
     email = models.EmailField()
+    contact_id = models.IntegerField()
 
     def __str__(self):
         return "Contact: {} {} - email: {}".format(self.name_first, self.name_last, self.user.email)
@@ -42,6 +44,7 @@ class Feedback(models.Model):
     job = models.ForeignKey(Job)
     tech = models.ForeignKey(Technician)
     level = models.ForeignKey(FeedbackLevel)
+    message = models.TextField(blank=True)
 
     def __str__(self):
         return "Feedback - Job {} - {} - {}".format(self.job.job_id, self.tech.name, self.level.title)

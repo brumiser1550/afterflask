@@ -16,6 +16,27 @@
         </div>
 
         <div class="container">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                    <tr>
+                        <th>Rating</th>
+                        <th>Client</th>
+                        <th>Message</th>
+                        <th>Techs</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="item in feedback">
+                        <td class="level-{$ item.level.value $}">{$ item.level.title $}</td>
+                        <td>{$ item.job.contact.contact_id $}</td>
+                        <td>{$ item.message != 0 ? item.message : "" $}</td>
+                        <td>{$ item.tech.name $}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
             <!-- Example row of columns -->
             <div class="row">
                 <div class="col-md-4">

@@ -78,8 +78,8 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='feedback',
-            name='tech',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='clean.Technician'),
+            name='techs',
+            field=models.ManyToManyField(blank=True, to='clean.Technician'),
         ),
         migrations.RunPython(load_initial_data)
     ]

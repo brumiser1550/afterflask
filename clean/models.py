@@ -19,7 +19,7 @@ class Contact(models.Model):
     contact_id = models.IntegerField()
 
     def __str__(self):
-        return "Contact: {} {} - email: {}".format(self.name_first, self.name_last, self.user.email)
+        return "Contact: {} {} - email: {}".format(self.name_first, self.name_last, self.email)
 
 
 class Job(models.Model):
@@ -42,9 +42,9 @@ class FeedbackLevel(models.Model):
 
 class Feedback(models.Model):
     job = models.ForeignKey(Job)
-    tech = models.ForeignKey(Technician)
     level = models.ForeignKey(FeedbackLevel)
     message = models.TextField(blank=True)
+    techs = models.ManyToManyField('Technician', blank=True)
 
     def __str__(self):
-        return "Feedback - Job {} - {} - {}".format(self.job.job_id, self.tech.name, self.level.title)
+        return "Feedback - Job {} - {}".format(self.job.job_id, self.level.title)

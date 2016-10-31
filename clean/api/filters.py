@@ -23,4 +23,12 @@ class FeedbackFilter(django_filters.FilterSet):
 
     class Meta:
         model = models.Feedback
-        fields = ['job', 'tech', 'level', 'message']
+        fields = ['job', 'techs', 'level', 'message']
+
+
+class FeedbackLevelFilter(django_filters.FilterSet):
+    id = IntegerListFilter(name='pk', lookup_type='in')
+
+    class Meta:
+        model = models.FeedbackLevel
+        fields = ['title', 'value']

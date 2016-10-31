@@ -18,7 +18,7 @@ class TechnicianSerializer(serializers.ModelSerializer):
         fields = ('name', 'user')
 
 
-class LevelSerializer(serializers.ModelSerializer):
+class FeedbackLevelSerializer(serializers.ModelSerializer):
     """ This serializer is getting the data for a Feedback Level. """
 
     class Meta:
@@ -40,12 +40,12 @@ class JobSerializer(serializers.ModelSerializer):
 
 class FeedbackSerializer(serializers.ModelSerializer):
     """ This serializer is getting the data for a Feedback. """
-    level = LevelSerializer(read_only=True)
+    level = FeedbackLevelSerializer(read_only=True)
     job = JobSerializer(read_only=True)
-    tech = TechnicianSerializer(read_only=True)
+    techs = TechnicianSerializer(read_only=True,many=True)
 
     class Meta:
         model = models.Feedback
-        fields = ('id', 'job', 'tech', 'level', 'message')
+        fields = ('id', 'job', 'techs', 'level', 'message')
 
 

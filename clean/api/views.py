@@ -11,3 +11,9 @@ class JobCollection(generics.ListAPIView):
     serializer_class = my_serializers.JobSerializer
     filter_class = my_filters.JobFilter
 
+
+class FeedbackCollection(generics.ListAPIView):
+    queryset = models.Feedback.objects.all()
+    serializer_class = my_serializers.FeedbackSerializer
+    filter_class = my_filters.FeedbackFilter
+

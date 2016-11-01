@@ -3,8 +3,16 @@ from django.contrib.auth.models import User
 
 
 class Technician(models.Model):
+    TYPES = (
+        ('1', 'Office Staff'),
+        ('2', 'Quality Checker'),
+        ('3', 'Admin'),
+        ('4', 'Operations'),
+    )
+
     name = models.CharField(max_length=60)
     user = models.ForeignKey(User)
+    type = models.CharField(max_length=2, choices=TYPES)
 
     def __str__(self):
         return "Tech: {} email: {}".format(self.name, self.user.email)
@@ -44,7 +52,7 @@ class Feedback(models.Model):
     job = models.ForeignKey(Job)
     level = models.ForeignKey(FeedbackLevel)
     message = models.TextField(blank=True)
-    techs = models.ManyToManyField('Technician', blank=True)
+    tech = models.ForeignKey(Technician)
 
     def __str__(self):
         return "Feedback - Job {} - {}".format(self.job.job_id, self.level.title)

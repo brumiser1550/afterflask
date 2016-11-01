@@ -29,14 +29,14 @@ class Migration(migrations.Migration):
                 ('phone', models.CharField(max_length=12, null=True, blank=True)),
                 ('address', models.TextField(max_length=240, null=True, blank=True)),
                 ('email', models.EmailField(max_length=254, null=True, blank=True)),
-                ('contact_id', models.IntegerField(default=None))
+                ('contact_id', models.IntegerField())
             ],
         ),
         migrations.CreateModel(
             name='Feedback',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('message', models.TextField(blank=True))
+                ('message', models.TextField(blank=True)),
             ],
         ),
         migrations.CreateModel(
@@ -64,6 +64,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=60)),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                ('type', models.CharField(choices=[('1', 'Office Staff'), ('2', 'Quality Checker'), ('3', 'Admin'), ('4', 'Operations')], max_length=2))
             ],
         ),
         migrations.AddField(
@@ -78,8 +79,8 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='feedback',
-            name='techs',
-            field=models.ManyToManyField(blank=True, to='clean.Technician'),
+            name='tech',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='clean.Technician'),
         ),
         migrations.RunPython(load_initial_data)
     ]

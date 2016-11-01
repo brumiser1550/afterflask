@@ -23,7 +23,7 @@ class FeedbackFilter(django_filters.FilterSet):
 
     class Meta:
         model = models.Feedback
-        fields = ['job', 'techs', 'level', 'message']
+        fields = ['job', 'tech', 'level', 'message']
 
 
 class FeedbackLevelFilter(django_filters.FilterSet):

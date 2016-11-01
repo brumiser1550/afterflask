@@ -2,21 +2,45 @@
  * Created by Brandon on 10/3/2016.
  */
 
-cleanApp.controller('companyController', function ($scope) {
-    $scope.companies = {
-        serviceceoID: 391,
-        feedbackComment: "Great job....thank you!",
-        tech1: "0",
-        qualityInspector: "",
-        contactId: 4608,
-        serviceceoJobID: 56690,
-        tech4: 0,
-        tech3: 0,
-        tech2: 0,
-        feedbackScore: 4,
-        qualityCheckScore: 0,
-        cleaningAppointmentDate: "4/14/2016",
-        qualityFeedbakComment: 0
-    };
-    console.log($scope);
+cleanApp.controller('companyController', function ($scope, $http) {
+    $scope.total = 0;
+    $scope.totals = {};
+    $scope.feedback = {};
+    $scope.levels = [];
+    get_levels();
+
+    function get_levels() {
+        $http({
+            method: 'GET',
+            url: '/api/v1/feedback-levels/'
+        }).then(function (response) {
+            angular.forEach(response.data, function (value, key) {
+                value.count = 0;
+                $scope.levels[value.value] = value;
+            });
+            get_feedback();
+        }, function (response, error_code) {
+            console.log(response);
+        });
+    }
+
+    function get_feedback() {
+        $http({
+            method: 'GET',
+            url: '/api/v1/feedback/'
+        }).then(function (response) {
+            $scope.feedback = response.data;
+            get_totals();
+        }, function (response, error_code) {
+            console.log(response);
+        });
+    }
+
+    function get_totals() {
+        $scope.total = $scope.feedback.length;
+        for (var i = 0; i < $scope.total; i++) {
+            $scope.levels[$scope.feedback[i].level.value].count++;
+        }
+    }
+
 });

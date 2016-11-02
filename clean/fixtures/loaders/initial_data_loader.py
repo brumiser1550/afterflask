@@ -58,6 +58,9 @@ for row in data[1:]:
     if row.job_id.isnumeric():
         feedback_score = models.FeedbackLevel.objects.filter(title=row.feedback_score).first()
         job = models.Job.objects.filter(job_id=int(row.job_id)).first()
+        new_feedback = models.Feedback(job=job,
+                                       level=feedback_score,
+                                       message=row.feedback_comment).save()
         for tech in [row.tech_1, row.tech_2, row.tech_3, row.tech_4]:
             if tech != '':
                 tech = models.Technician.objects.filter(name=tech).first()

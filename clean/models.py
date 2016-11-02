@@ -35,9 +35,14 @@ class Job(models.Model):
     completed = models.DateTimeField()
     job_id = models.IntegerField()
     contact = models.ForeignKey(Contact, null=True)
+    company_feedback = models.ForeignKey('Feedback', blank=True, null=True, related_name='job_feedback')
 
     def __str__(self):
         return "Job {} - job_id: {} Scheduled: {}  Completed: {}".format(self.pk, self.job_id, self.scheduled, self.completed)
+
+    @property
+    def techs(self):
+        return [feedback.tech for feedback in self.feedback_set.all()]
 
 
 class FeedbackLevel(models.Model):
@@ -52,7 +57,7 @@ class Feedback(models.Model):
     job = models.ForeignKey(Job)
     level = models.ForeignKey(FeedbackLevel)
     message = models.TextField(blank=True)
-    tech = models.ForeignKey(Technician)
+    tech = models.ForeignKey(Technician, null=True, blank=True)
 
     def __str__(self):
         return "Feedback - Job {} - {}".format(self.job.job_id, self.level.title)

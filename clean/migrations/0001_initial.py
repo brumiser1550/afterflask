@@ -80,7 +80,15 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='feedback',
             name='tech',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='clean.Technician'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='clean.Technician'),
+        ),
+        migrations.AddField(
+            model_name='job',
+            name='company_feedback',
+            field=models.ForeignKey(blank=True, null=True,
+                                    on_delete=django.db.models.deletion.CASCADE,
+                                    related_name='job_feedback',
+                                    to='clean.Feedback'),
         ),
         migrations.RunPython(load_initial_data)
     ]

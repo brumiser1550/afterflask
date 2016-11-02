@@ -26,14 +26,25 @@ class FeedbackLevelSerializer(serializers.ModelSerializer):
         fields = ('title', 'value')
 
 
+class CompanyFeedbackSerializer(serializers.ModelSerializer):
+    """ This serializer is getting the data for a Feedback. """
+    level = FeedbackLevelSerializer(read_only=True)
+    tech = TechnicianSerializer(read_only=True)
+
+    class Meta:
+        model = models.Feedback
+        fields = ('id', 'tech', 'level', 'message')
+
+
 class JobSerializer(serializers.ModelSerializer):
     """ This serializer is getting the data for a Job. """
     contact = ContactSerializer(read_only=True)
     techs = TechnicianSerializer(read_only=True, many=True)
+    company_feedback = CompanyFeedbackSerializer(read_only=True)
 
     class Meta:
         model = models.Job
-        fields = ('scheduled', 'completed', 'id', 'job_id', 'contact', 'techs')
+        fields = ('scheduled', 'completed', 'id', 'job_id', 'contact', 'techs', 'company_feedback')
 
     def get_contact(self, obj):
         return obj

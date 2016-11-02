@@ -42,7 +42,7 @@ class Job(models.Model):
 
     @property
     def techs(self):
-        return [feedback.tech for feedback in self.feedback_set.all()]
+        return [feedback.tech for feedback in self.feedback_set.all() if feedback.tech is not None]
 
 
 class FeedbackLevel(models.Model):

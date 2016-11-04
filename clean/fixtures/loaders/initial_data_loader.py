@@ -49,14 +49,20 @@ for tech in techs:
     new_tech = models.Technician(name=tech, user=user, type='4').save()
     counter += 1
 
-levels = list(set([row.feedback_score for row in data[1:]]))
+levels = {
+    0: "No Rating",
+    1: "Red",
+    2: "Yellow",
+    3: "Green",
+    4: "Gold",
+}
 
-for level in levels:
-    new_feedback_score = models.FeedbackLevel(value=int(level), title=level).save()
+for level, title in levels.items():
+    new_feedback_score = models.FeedbackLevel(value=int(level), title=title).save()
 
 for row in data[1:]:
     if row.job_id.isnumeric():
-        feedback_score = models.FeedbackLevel.objects.filter(title=row.feedback_score).first()
+        feedback_score = models.FeedbackLevel.objects.filter(value=row.feedback_score).first()
         job = models.Job.objects.filter(job_id=int(row.job_id)).first()
         new_feedback = models.Feedback(job=job,
                                        level=feedback_score,

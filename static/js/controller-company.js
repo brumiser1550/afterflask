@@ -6,8 +6,10 @@ cleanApp.controller('companyController', function ($scope, $http) {
     $scope.total = 0;
     $scope.totals = {};
     $scope.feedback = {};
+    $scope.jobs = {};
     $scope.levels = [];
     get_levels();
+    get_feedback();
 
     function get_levels() {
         $http({
@@ -18,7 +20,18 @@ cleanApp.controller('companyController', function ($scope, $http) {
                 value.count = 0;
                 $scope.levels[value.value] = value;
             });
-            get_feedback();
+            get_overview();
+        }, function (response, error_code) {
+            console.log(response);
+        });
+    }
+
+    function get_overview() {
+        $http({
+            method: 'GET',
+            url: '/api/v1/jobs/'
+        }).then(function (response) {
+            $scope.jobs = response.data;
         }, function (response, error_code) {
             console.log(response);
         });
@@ -29,18 +42,20 @@ cleanApp.controller('companyController', function ($scope, $http) {
             method: 'GET',
             url: '/api/v1/feedback/'
         }).then(function (response) {
+            console.log(response);
             $scope.feedback = response.data;
-            get_totals();
+            feedback_totals();
         }, function (response, error_code) {
             console.log(response);
         });
     }
 
-    function get_totals() {
+    function feedback_totals() {
         $scope.total = $scope.feedback.length;
         for (var i = 0; i < $scope.total; i++) {
             $scope.levels[$scope.feedback[i].level.value].count++;
         }
+        console.log($scope.levels);
     }
 
 });

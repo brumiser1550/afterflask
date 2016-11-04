@@ -61,3 +61,8 @@ class Feedback(models.Model):
 
     def __str__(self):
         return "Feedback - Job {} - {}".format(self.job.job_id, self.level.title)
+
+
+class Acknowledgement(models.Model):
+    feedback = models.ForeignKey(Feedback)
+    message = models.TextField(blank=True)

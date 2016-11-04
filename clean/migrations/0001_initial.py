@@ -67,6 +67,17 @@ class Migration(migrations.Migration):
                 ('type', models.CharField(choices=[('1', 'Office Staff'), ('2', 'Quality Checker'), ('3', 'Admin'), ('4', 'Operations')], max_length=2))
             ],
         ),
+        migrations.CreateModel(
+            name='Acknowledgement',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True,
+                                        serialize=False, verbose_name='ID')),
+                ('message', models.TextField(blank=True)),
+                ('feedback',
+                 models.ForeignKey(on_delete=django.db.models.deletion.CASCADE,
+                                   to='clean.Feedback')),
+            ],
+        ),
         migrations.AddField(
             model_name='feedback',
             name='job',

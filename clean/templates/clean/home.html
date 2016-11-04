@@ -34,7 +34,7 @@
                         <td class="feedback-contact">{$ item.contact.contact_id $}</td>
                         <td class="feedback-message">{$ item.company_feedback.message != 0 ? item.company_feedback.message : "" $}</td>
                         <td class="feedback-techs">
-                            <a ng-href="{% url 'clean:technicians' %}{$ tech.user $}" ng-repeat="tech in item.techs">{$ tech.name $}{$ !$last ? ", " : "" $}</a>
+                            <a target="_blank" ng-href="{% url 'clean:technicians' %}{$ tech.user $}" ng-repeat="tech in item.techs">{$ tech.name $}{$ !$last ? ", " : "" $}</a>
                         </td>
                     </tr>
                     </tbody>

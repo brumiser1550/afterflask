@@ -108,27 +108,29 @@ ul.nav.navbar-right {
     color: #FFD700;
 }
 
+.progress-bar-level-0,
 .level-0-bg {
     background: #33B5E5;
 }
-
+.progress-bar-level-1,
 .level-1-bg {
     background: #FF4444;
 }
-
+.progress-bar-level-2,
 .level-2-bg {
     background: #FFBB33;
 }
-
+.progress-bar-level-3,
 .level-3-bg {
     background: #00C851;
 }
-
+.progress-bar-level-4,
 .level-4-bg {
     background: #FFD700;
 }
 
 .mini-charts .mini-chart {
+    background: blue;
     color: #FFFFFF;
     padding: 15px;
     margin: 15px 0;
@@ -143,6 +145,32 @@ ul.nav.navbar-right {
     margin: 0;
 }
 
+/* Technician */
+.rating-block button {
+    margin: 0 5px 0 0;
+}
+
+.rating-block button:hover,
+.rating-block button:focus {
+    background-color: inherit;
+    background-position: inherit;
+}
+
+.technician-detail .jumbotron {
+    margin-bottom: 0;
+}
+
+.technician-detail .weekly-scores {
+    padding: 10px;
+    text-align: center;
+    background: #42a0c7;
+}
+
+.technician-detail .weekly-scores .weekly-score{
+    color: #FFFFFF;
+    font-weight:500;
+    font-size: 18px;
+}
 
 /*
  * Circular Loader

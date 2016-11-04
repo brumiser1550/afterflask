@@ -18,6 +18,15 @@ class FeedbackCollection(generics.ListAPIView):
     filter_class = my_filters.FeedbackFilter
 
 
+class FeedbackDetail(generics.ListAPIView):
+    serializer_class = my_serializers.FeedbackSerializer
+    filter_class = my_filters.FeedbackFilter
+
+    def get_queryset(self):
+        user = self.kwargs['pk']
+        return models.Feedback.objects.filter(tech__user=user)
+
+
 class FeedbackLevelCollection(generics.ListAPIView):
     queryset = models.FeedbackLevel.objects.all()
     serializer_class = my_serializers.FeedbackLevelSerializer
@@ -28,3 +37,12 @@ class TechnicianCollection(generics.ListAPIView):
     queryset = models.Technician.objects.all()
     serializer_class = my_serializers.TechnicianSerializer
     filter_class = my_filters.TechnicianFilter
+
+
+class TechnicianDetail(generics.RetrieveAPIView):
+    serializer_class = my_serializers.TechnicianSerializer
+    filter_class = my_filters.TechnicianFilter
+
+    def get_queryset(self):
+        user = self.kwargs['pk']
+        return models.Technician.objects.filter(user=user)

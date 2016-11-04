@@ -22,3 +22,9 @@ class FeedbackLevelCollection(generics.ListAPIView):
     queryset = models.FeedbackLevel.objects.all()
     serializer_class = my_serializers.FeedbackLevelSerializer
     filter_class = my_filters.FeedbackLevelFilter
+
+
+class TechnicianCollection(generics.ListAPIView):
+    queryset = models.Technician.objects.all()
+    serializer_class = my_serializers.TechnicianSerializer
+    filter_class = my_filters.TechnicianFilter

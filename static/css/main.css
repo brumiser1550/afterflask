@@ -48,7 +48,7 @@ a {
 /* Various other styles end */
 
 #content {
-    padding-top: 50px;
+    padding-top: 75px;
 }
 
 .nowrap {
@@ -330,6 +330,16 @@ hr.small {
 }
 
 /* Header */
+header {
+    display: table;
+    position: relative;
+    width: 100%;
+    padding: 50px 0;
+    height: 150px;
+    background: #e98c3c;
+    margin-top: 50px;
+    color: #FFFFFF;
+}
 .home-bg {
     display: table;
     position: relative;

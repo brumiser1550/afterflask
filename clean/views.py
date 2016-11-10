@@ -8,6 +8,10 @@ class HomeView(generic.TemplateView):
     template_name = "clean/home.html"
 
 
+class CompanyView(generic.TemplateView):
+    template_name = "clean/company.html"
+
+
 class TechnicianListView(LoginRequiredMixin, generic.TemplateView):
     model = models.Technician
     template_name = "clean/technicians_list.html"

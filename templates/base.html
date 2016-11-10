@@ -65,12 +65,9 @@
 
 </head>
 
-<body ng-controller="reviewsController">
+<body ng-controller="reviewsController" id="page-top" class="body {% block body_class %}{% endblock %}">
 
-{% block header %}
-    <!-- Wrap all page content here -->
-    <div id="wrap">
-
+{% block menu %}
     <!-- Fixed navbar -->
     <div class="navbar navbar-default navbar-fixed-top">
         <div class="container">
@@ -83,20 +80,25 @@
                 </button>
                 <a class="navbar-brand" href="{% url 'clean:home' %}">Naturalcare</a>
             </div>
-
             <div class="collapse navbar-collapse" uib-collapse="isNavCollapsed">
                 <ul class="nav navbar-nav">
-                    <li {% if request.path == "/" %} class="active" {% endif %}>
-                        <a href="{% url 'clean:home' %}">Home</a>
-                    </li>
-                    <li class="dropdown {% if "technicians" in request.path or "jobs" in request.path %} active {% endif %}" uib-dropdown>
-                        <a class="dropdown-toggle" uib-dropdown-toggle>Reports <b class="caret"></b></a>
-                        <ul class="dropdown-menu" uib-dropdown-menu role="menu">
-                            <li {% if "technicians" in request.path %} class="active" {% endif %}><a href="{% url 'clean:technicians' %}">Technicians</a></li>
-                            <li {% if "jobs" in request.path %} class="active" {% endif %}><a href="{% url 'clean:jobs' %}">Jobs</a></li>
-                            <li {% if "feedback" in request.path %} class="active" {% endif %}><a href="{% url 'clean:feedbacks' %}">Feedback</a></li>
-                        </ul>
-                    </li>
+                    {% if user.is_authenticated %}
+                        <li {% if "company" in request.path %} class="active" {% endif %}>
+                            <a href="{% url 'clean:company' %}">Company</a>
+                        </li>
+                        <li class="dropdown {% if "technicians" in request.path or "jobs" in request.path %} active {% endif %}"
+                            uib-dropdown>
+                            <a class="dropdown-toggle" uib-dropdown-toggle>Reports <b class="caret"></b></a>
+                            <ul class="dropdown-menu" uib-dropdown-menu role="menu">
+                                <li {% if "technicians" in request.path %} class="active" {% endif %}><a
+                                        href="{% url 'clean:technicians' %}">Technicians</a></li>
+                                <li {% if "jobs" in request.path %} class="active" {% endif %}><a
+                                        href="{% url 'clean:jobs' %}">Jobs</a></li>
+                                <li {% if "feedback" in request.path %} class="active" {% endif %}><a
+                                        href="{% url 'clean:feedbacks' %}">Feedback</a></li>
+                            </ul>
+                        </li>
+                    {% endif %}
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     {% if user.is_staff %}
@@ -119,12 +121,15 @@
     </div>
 {% endblock %}
 
+{% block header %}{% endblock %}
 
 <!-- Begin page content -->
 <main id="content" role="main">
     {% block messages %}
         <div class="container alerts" ng-show="alerts != ''">
-            <div uib-alert ng-repeat="alert in alerts" ng-class="'alert-' + (alert.type || 'warning')"  dismiss-on-timeout="{$alert.timeout$}" close="closeAlert($index)">{$ alert.msg | filterHtmlChars $}</div>
+            <div uib-alert ng-repeat="alert in alerts" ng-class="'alert-' + (alert.type || 'warning')"
+                 dismiss-on-timeout="{$alert.timeout$}" close="closeAlert($index)">{$ alert.msg | filterHtmlChars $}
+            </div>
         </div>
     {% endblock %}
 
@@ -133,16 +138,41 @@
 
 
 {% block footer %}
-    <div class="container">
-        <div class="footer">
-            <footer>
-                <p>&copy; {% now "Y" %} Phoenix Coding, LLC.</p>
-            </footer>
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-10 col-lg-offset-1 text-center">
+                    <h4><strong>Naturalcare Cleaning Services</strong>
+                    </h4>
+                    <p>3481 Melrose Place
+                        <br>Beverly Hills, CA 90210</p>
+                    <ul class="list-unstyled">
+                        <li><i class="fa fa-phone fa-fw"></i> (123) 456-7890</li>
+                        <li><i class="fa fa-envelope-o fa-fw"></i> <a
+                                href="mailto:name@example.com">name@example.com</a>
+                        </li>
+                    </ul>
+                    <br>
+                    <ul class="list-inline">
+                        <li>
+                            <a href="#"><i class="fa fa-facebook fa-fw fa-3x"></i></a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-twitter fa-fw fa-3x"></i></a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-dribbble fa-fw fa-3x"></i></a>
+                        </li>
+                    </ul>
+                    <hr class="small">
+                    <p class="text-muted">&copy; {% now "Y" %} Naturalcare Cleaning Services</p>
+                </div>
+            </div>
         </div>
-    </div>
+        <a id="to-top" href="#page-top" class="btn btn-dark btn-lg"><i class="fa fa-chevron-up fa-fw fa-1x"></i></a>
+    </footer>
 {% endblock %}
 
-</div>
 <div class="loaderContainer" ng-hide="loaded">
     <div class="loader">Loading...</div>
 </div>

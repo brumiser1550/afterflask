@@ -1,7 +1,7 @@
 /**
  * Created by Brandon on 10/3/2016.
  */
-var cleanApp = angular.module('cleanApp', ['ui.bootstrap']);
+var cleanApp = angular.module('cleanApp', ['ngAnimate','ui.bootstrap']);
 // var base = angular.module('base', ['http', 'location', 'anchorScroll']);
 // var companies = angular.module('companies', []);
 

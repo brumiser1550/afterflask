@@ -15,7 +15,14 @@ class JobFilter(django_filters.FilterSet):
 
     class Meta:
         model = models.Job
-        fields = ['scheduled', 'completed', 'job_id']
+        fields = {
+            'scheduled': ['contains'],
+            'completed': ['date'],
+            'job_id': ['exact'],
+            'contact__name_first': ['contains'],
+            'contact__name_last': ['contains'],
+            'contact__contact_id': ['exact'],
+        }
 
 
 class FeedbackFilter(django_filters.FilterSet):

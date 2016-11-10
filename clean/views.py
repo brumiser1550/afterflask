@@ -12,6 +12,10 @@ class CompanyView(generic.TemplateView):
     template_name = "clean/company.html"
 
 
+class LeaveFeedbackView(generic.TemplateView):
+    template_name = "clean/feedback.html"
+
+
 class TechnicianListView(LoginRequiredMixin, generic.TemplateView):
     model = models.Technician
     template_name = "clean/technicians_list.html"

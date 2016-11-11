@@ -410,7 +410,6 @@ footer .text-muted {
 }
 
 #to-top {
-  display: none;
   position: fixed;
   bottom: 5px;
   right: 5px;

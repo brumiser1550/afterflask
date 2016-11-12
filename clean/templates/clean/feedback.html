@@ -16,7 +16,7 @@
         <div class="container">
             <div class="row">
                 {$ contact $}
-                <form class="form-horizontal" ng-submit="get_jobs()">
+                <form class="form-horizontal" ng-submit="getJobs()">
                     <div class="col-xs-3">
                         <div class="form-group">
                             <label for="contact__name_first" class="control-label">First Name</label>
@@ -34,8 +34,9 @@
                     <div class="col-xs-3">
                         <label for="completed__date" class="control-label">Date</label>
                         <p class="input-group">
+                            {# ng-required="true" #}
                             <input type="text" class="form-control" uib-datepicker-popup="yyyy-MM-dd" ng-model="completed"
-                                   datepicker-options="dateOptions" ng-required="true" is-open="popup2.opened"
+                                   datepicker-options="dateOptions" is-open="popup2.opened"
                                    close-text="Close" ng-change="updateFormattedDate();" id="completed__date"/>
                             <span class="input-group-btn">
                                 <button type="button" class="btn btn-default" ng-click="open2()">
@@ -58,6 +59,7 @@
                     <p>{$ job.techs $}</p>
                     <p>{$ job.company_feedback.level.title $}</p>
                 </div>
+                <button class="btn" ng-click="getJobs()">Get More</button>
             </div>
         </div>
     </div>

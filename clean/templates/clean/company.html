@@ -27,19 +27,32 @@
                         <th>Techs</th>
                     </tr>
                     </thead>
-                    <tbody>
-                    <tr ng-repeat="item in jobs">
+                    <tbody infinite-scroll='loadMoreJobs()' infinite-scroll-distance='0' infinite-scroll-disabled='api.jobs.busy || api.jobs.done'>
+{#                    <tbody>#}
+                    <tr ng-repeat="job in jobs | orderBy:'-completed' track by job.id">
                         <td class="feedback-rating nowrap">
-                            <p><span class="level-{$ item.company_feedback.level.value $} glyphicon glyphicon-star"></span>{$ item.company_feedback.level.title $}</p>
+                            <p>{$ $index + 1 $}
+                                <span class="level-{$ job.company_feedback.level.value $} glyphicon glyphicon-star"></span>
+                                {$ job.company_feedback.level.title $}
+                            </p>
                         </td>
-                        <td class="feedback-contact">{$ item.contact.contact_id $}</td>
-                        <td class="feedback-message">{$ item.company_feedback.message != 0 ? item.company_feedback.message : "" $}</td>
+                        <td class="feedback-contact">{$ job.contact.contact_id $}</td>
+                        <td class="feedback-message">{$ job.id $} -- {$ job.company_feedback.message != 0 ?
+                            job.company_feedback.message : "" $}
+                        </td>
                         <td class="feedback-techs">
-                            <a target="_blank" ng-href="{% url 'clean:technicians' %}{$ tech.user $}" ng-repeat="tech in item.techs">{$ tech.name $}{$ !$last ? ", " : "" $}</a>
+                            <a target="_blank" ng-href="{% url 'clean:technicians' %}{$ tech.user $}"
+                               ng-repeat="tech in job.techs">{$ tech.name $}{$ !$last ? ", " : "" $}</a>
                         </td>
                     </tr>
                     </tbody>
                 </table>
+                <div>
+                    <p ng-show="api.jobs.busy">Loading...</p>
+                    <p ng-show="api.jobs.done">All results fetched</p>
+                </div>
+
+                <button ng-click="loadMoreJobs();">More</button>
             </div>
         </div>
     </div>

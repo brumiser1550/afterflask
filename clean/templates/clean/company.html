@@ -9,10 +9,17 @@
         <div class="container">
             <div class="mini-charts">
                 <div class="row text-center">
-                    <div class="col-md-2 {$ $first ? 'col-md-offset-1' : '' $}" ng-repeat="level in levels">
+{#                    <div class="col-md-2 {$ $first ? 'col-md-offset-1' : '' $}" ng-repeat="level in levels | orderBy:'value'">#}
+                    <div class="col-md-2" ng-repeat="level in levels | orderBy:'value'">
                         <div class="mini-chart level-{$ level.value $}-bg">
                             <h2 class="count">{$ level.count $}</h2>
                             <p class="title">{$ level.title $}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="mini-chart level-0-bg">
+                            <h2 class="count">{$ response_rate | number:0 $}%</h2>
+                            <p class="title">Response Rate</p>
                         </div>
                     </div>
                 </div>
@@ -21,17 +28,16 @@
                 <table class="table table-striped table-hover">
                     <thead>
                     <tr>
-                        <th>Rating</th>
-                        <th>Client</th>
-                        <th>Message</th>
-                        <th>Techs</th>
+                        <th class="col-xs-1">Rating</th>
+                        <th class="col-xs-2">Client</th>
+                        <th class="col-xs-6">Message</th>
+                        <th class="col-xs-3">Techs</th>
                     </tr>
                     </thead>
                     <tbody infinite-scroll='loadMoreJobs()' infinite-scroll-distance='0' infinite-scroll-disabled='api.jobs.busy || api.jobs.done'>
-{#                    <tbody>#}
                     <tr ng-repeat="job in jobs | orderBy:'-completed' track by job.id">
                         <td class="feedback-rating nowrap">
-                            <p>{$ $index + 1 $}
+                            <p>
                                 <span class="level-{$ job.company_feedback.level.value $} glyphicon glyphicon-star"></span>
                                 {$ job.company_feedback.level.title $}
                             </p>
@@ -51,8 +57,7 @@
                     <p ng-show="api.jobs.busy">Loading...</p>
                     <p ng-show="api.jobs.done">All results fetched</p>
                 </div>
-
-                <button ng-click="loadMoreJobs();">More</button>
+{#                <button ng-click="loadMoreJobs();">More</button>#}
             </div>
         </div>
     </div>

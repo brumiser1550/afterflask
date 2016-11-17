@@ -11,8 +11,7 @@ cleanApp.service('CleanAPI', function ($http) {
         results: []
     };
 
-    this.query = function(params)
-    {
+    this.query = function (params) {
         params.busy = true;
         $http({
             method: params.method,
@@ -34,7 +33,7 @@ cleanApp.service('CleanAPI', function ($http) {
         });
     };
 
-    var containsObject = function(obj, list) {
+    var containsObject = function (obj, list) {
         var i;
         for (i = 0; i < list.length; i++) {
             if (angular.equals(list[i], obj)) {
@@ -60,7 +59,7 @@ cleanApp.service('CleanAPI', function ($http) {
 
 });
 
-cleanApp.controller('companyController', function ($scope, $http, $timeout, CleanAPI) {
+cleanApp.controller('companyController', function ($scope, $http, $timeout, $filter, CleanAPI) {
     $scope.loading = false;
     $scope.total = 0;
     $scope.totals = {};
@@ -68,13 +67,21 @@ cleanApp.controller('companyController', function ($scope, $http, $timeout, Clea
     $scope.jobs = [];
     $scope.levels = [];
 
+    $scope.active_range = "this";
+
+    $scope.date_to = new Date();
+    $scope.date_from = new Date();
+    $scope.date_from = getMonday($scope.date_to);
+
     $scope.api = {};
     $scope.api.default = {
         url: "",
         method: "GET",
         data: {
             offset: 0,
-            limit: 25
+            limit: 25,
+            date_from: updateFormattedDate($scope.date_from),
+            date_to: updateFormattedDate($scope.date_to)
         },
         busy: true,
         done: false,
@@ -88,51 +95,6 @@ cleanApp.controller('companyController', function ($scope, $http, $timeout, Clea
     $scope.total_feedback = 0;
     $scope.total_response = 0;
     $scope.response_rate = 0;
-    function getLevels() {
-        $http({
-            method: 'GET',
-            url: '/api/v1/feedback-levels/',
-            params: $scope.api.levels
-        }).then(function (response) {
-            next = response.data.next;
-            $scope.levels = response.data.results;
-            angular.forEach(response.data.results, function (value, key) {
-                $scope.total_feedback += value.count;
-                if(value.value!=0){
-                    $scope.total_response += value.count;
-                }
-                $scope.levels[value.value] = value;
-            });
-            console.log($scope.total_response);
-            console.log($scope.total_feedback);
-            $scope.response_rate = $scope.total_response / $scope.total_feedback * 100;
-        }, function (response, error_code) {
-            console.log(response);
-        });
-    }
-
-    function getJobs(params) {
-        $scope.api.jobs.busy = true;
-        $http({
-            method: 'GET',
-            url: '/api/v1/jobs/',
-            params: params.data
-        }).then(function (response) {
-            // $scope.jobs = response.data.results;
-            console.log(response);
-            angular.forEach(response.data.results, function (value, key) {
-                if (!$scope.containsObject(value, $scope.jobs)) {
-                    $scope.jobs.push(value);
-                }
-            });
-            $scope.api.jobs.busy = false;
-            if(response.data.next == null) {
-                $scope.api.jobs.done = true;
-            }
-        }, function (response, error_code) {
-            console.log(response);
-        });
-    }
 
     $scope.loadMoreJobs = function () {
         $scope.api.jobs.data.offset = $scope.api.jobs.data.offset + $scope.api.jobs.data.limit;
@@ -159,5 +121,100 @@ cleanApp.controller('companyController', function ($scope, $http, $timeout, Clea
         }
         return false;
     };
+
+    $scope.updateDateRange = function () {
+        if ($scope.active_range == "this") {
+            $scope.date_to = new Date();
+            $scope.date_from = getMonday($scope.date_to);
+        }
+        if ($scope.active_range == "last") {
+            $scope.date_to = new Date();
+            $scope.date_to.setDate($scope.date_to.getDate() - 7);
+            $scope.date_from = getMonday($scope.date_to);
+            $scope.date_to = getFriday($scope.date_to);
+        }
+    };
+
+    $scope.dateOptions = {
+        formatYear: 'yy',
+        startingDay: 1
+    };
+
+    $scope.date_from_pop = {
+        opened: false
+    };
+    $scope.openDateFromPop = function () {
+        $scope.date_from_pop.opened = true;
+    };
+
+    $scope.date_to_pop = {
+        opened: false
+    };
+    $scope.openDateToPop = function () {
+        $scope.date_to_pop.opened = true;
+    };
+
+
+    function getLevels() {
+        $http({
+            method: 'GET',
+            url: '/api/v1/feedback-levels/',
+            params: $scope.api.levels.data
+        }).then(function (response) {
+            console.log(response);
+            $scope.levels = response.data.results;
+            angular.forEach(response.data.results, function (value, key) {
+                $scope.total_feedback += value.count;
+                if (value.value != 0) {
+                    $scope.total_response += value.count;
+                }
+                $scope.levels[value.value] = value;
+            });
+            $scope.response_rate = $scope.total_response / $scope.total_feedback * 100;
+        }, function (response, error_code) {
+            console.log(response);
+        });
+    }
+
+    function getJobs(params) {
+        $scope.api.jobs.busy = true;
+        $http({
+            method: 'GET',
+            url: '/api/v1/jobs/',
+            params: params.data
+        }).then(function (response) {
+            console.log(response);
+            // $scope.jobs = response.data.results;
+            angular.forEach(response.data.results, function (value, key) {
+                if (!$scope.containsObject(value, $scope.jobs)) {
+                    $scope.jobs.push(value);
+                }
+            });
+            $scope.api.jobs.busy = false;
+            if (response.data.next == null) {
+                $scope.api.jobs.done = true;
+            }
+        }, function (response, error_code) {
+            console.log(response);
+        });
+    }
+
+    function updateFormattedDate(d) {
+        return $filter('date')(d, "yyyy-MM-dd");
+    }
+
+    function getMonday(d) {
+        d = new Date(d);
+        var day = d.getDay();
+        var diff = d.getDate() - day + (day == 0 ? -6 : 1); // adjust when day is sunday
+        return new Date(d.setDate(diff));
+    }
+
+    function getFriday(d) {
+        d = new Date(d);
+        var day = d.getDay();
+        var diff = d.getDate() - day + 5;
+        return new Date(d.setDate(diff));
+    }
 
 });

@@ -8,15 +8,24 @@ from . import metadata as my_metadata
 
 
 class JobCollection(generics.ListAPIView):
-    queryset = models.Job.objects.all()
+    # queryset = models.Job.objects.all()
+    model = models.Job
     serializer_class = my_serializers.JobSerializer
     filter_class = my_filters.JobFilter
     filter_backends = (filters.OrderingFilter,)
     ordering_fields = ('completed',)
     ordering = ('-completed',)
 
+    def get_queryset(self):
+        date_from = self.request.query_params.get('date_from', None)
+        date_to = self.request.query_params.get('date_to', None)
+        if not date_from or not date_to:
+            return models.Job.objects.all()
+        return models.Job.objects.filter(completed__gte=date_from,
+                                         completed__lte=date_to)
 
-class FeedbackCollection(generics.ListAPIView,):
+
+class FeedbackCollection(generics.ListAPIView, ):
     queryset = models.Feedback.objects.all()
     serializer_class = my_serializers.FeedbackSerializer
     filter_class = my_filters.FeedbackFilter

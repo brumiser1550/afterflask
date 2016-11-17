@@ -106,7 +106,7 @@ cleanApp.controller('companyController', function ($scope, $http, $timeout, $fil
         $timeout(function () {
             $scope.timeout = 1000000000;
             getJobs($scope.api.default);
-            getLevels();
+            getLevels($scope.api.default);
             sync();
         }, $scope.timeout);
     };
@@ -123,6 +123,7 @@ cleanApp.controller('companyController', function ($scope, $http, $timeout, $fil
     };
 
     $scope.updateDateRange = function () {
+        $scope.jobs = [];
         if ($scope.active_range == "this") {
             $scope.date_to = new Date();
             $scope.date_from = getMonday($scope.date_to);
@@ -133,6 +134,11 @@ cleanApp.controller('companyController', function ($scope, $http, $timeout, $fil
             $scope.date_from = getMonday($scope.date_to);
             $scope.date_to = getFriday($scope.date_to);
         }
+        $scope.api.default.data.date_from = updateFormattedDate($scope.date_from);
+        $scope.api.default.data.date_to = updateFormattedDate($scope.date_to);
+        console.log($scope.api.default.data);
+        getJobs($scope.api.default);
+        getLevels($scope.api.default);
     };
 
     $scope.dateOptions = {
@@ -155,13 +161,14 @@ cleanApp.controller('companyController', function ($scope, $http, $timeout, $fil
     };
 
 
-    function getLevels() {
+    function getLevels(params) {
         $http({
             method: 'GET',
             url: '/api/v1/feedback-levels/',
-            params: $scope.api.levels.data
+            params: params.data
         }).then(function (response) {
             console.log(response);
+            $scope.response_rate = 0;
             $scope.levels = response.data.results;
             angular.forEach(response.data.results, function (value, key) {
                 $scope.total_feedback += value.count;

@@ -58,10 +58,23 @@ class TechnicianSerializer(serializers.ModelSerializer):
 
 class FeedbackLevelSerializer(serializers.ModelSerializer):
     """ This serializer is getting the data for a Feedback Level. """
+    count = serializers.SerializerMethodField()
 
     class Meta:
         model = models.FeedbackLevel
-        fields = ('title', 'value')
+        fields = ('title', 'value', 'count')
+
+    def get_count(self, obj):
+        request = self.context['request']
+        date_from = request.query_params.get('date_from', None)
+        date_to = request.query_params.get('date_to', None)
+        if not date_from or not date_to:
+            count = models.Feedback.objects.filter(level__value=obj.value).count()
+            return count
+        count = models.Feedback.objects.filter(level__value=obj.value,
+                                               job__completed__gte=date_from,
+                                               job__completed__lte=date_to).count()
+        return count
 
 
 class CompanyFeedbackSerializer(serializers.ModelSerializer):
@@ -100,5 +113,3 @@ class FeedbackSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Feedback
         fields = ('id', 'job', 'tech', 'level', 'message')
-
-

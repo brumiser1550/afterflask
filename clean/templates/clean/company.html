@@ -7,12 +7,67 @@
 {% block content %}
     <div ng-controller="companyController">
         <div class="container">
+            <div class="row">
+                <div class="form-inline">
+                    <button type="button" class="btn" ng-disabled="api.jobs.busy"
+                            ng-click="active_range = 'this'; updateDateRange();"
+                            ng-class="active_range == 'this' ? 'btn-info' : 'btn-default'">This Week
+                    </button>
+                    <button type="button" class="btn" ng-disabled="api.jobs.busy"
+                            ng-click="active_range = 'last'; updateDateRange();"
+                            ng-class="active_range == 'last' ? 'btn-info' : 'btn-default'">Last Week
+                    </button>
+                    <button type="button" class="btn" ng-disabled="api.jobs.busy" ng-click="active_range = 'custom'"
+                            ng-class="active_range == 'custom' ? 'btn-info' : 'btn-default'">Custom
+                    </button>
+{#                    <div class="form-group" ng-show="active_range == 'custom'">#}
+                    <div class="form-group">
+                        <div class="form-group">
+                            <label class="sr-only" for="exampleInputAmount">Amount (in dollars)</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" uib-datepicker-popup="yyyy-MM-dd"
+                                       ng-model="date_from" placeholder="From"
+                                       datepicker-options="dateOptions" is-open="date_from.opened"
+                                       close-text="Close" id="completed__date"/>
+                                <div class="input-group-btn">
+                                    <button type="button" class="btn btn-default" ng-click="openDateFromPop()">
+                                        <i class="glyphicon glyphicon-calendar"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        -
+                        <div class="form-group">
+                            <label class="sr-only" for="exampleInputAmount">Amount (in dollars)</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" uib-datepicker-popup="yyyy-MM-dd"
+                                       ng-model="date_to" placeholder="To"
+                                       datepicker-options="dateOptions" is-open="date_to.opened"
+                                       close-text="Close" id="completed__date"/>
+                                <div class="input-group-btn">
+                                    <button type="button" class="btn btn-default" ng-click="openDateToPop()">
+                                        <i class="glyphicon glyphicon-calendar"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-info" ng-click="updateDateRange();">Update</button>
+                    </div>
+                </div>
+            </div>
             <div class="mini-charts">
                 <div class="row text-center">
-                    <div class="col-md-2 {$ $first ? 'col-md-offset-1' : '' $}" ng-repeat="level in levels">
+                    {#                    <div class="col-md-2 {$ $first ? 'col-md-offset-1' : '' $}" ng-repeat="level in levels | orderBy:'value'">#}
+                    <div class="col-md-2" ng-repeat="level in levels | orderBy:'value'">
                         <div class="mini-chart level-{$ level.value $}-bg">
                             <h2 class="count">{$ level.count $}</h2>
                             <p class="title">{$ level.title $}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="mini-chart level-0-bg">
+                            <h2 class="count">{$ response_rate | number:0 $}%</h2>
+                            <p class="title">Response Rate</p>
                         </div>
                     </div>
                 </div>
@@ -21,25 +76,37 @@
                 <table class="table table-striped table-hover">
                     <thead>
                     <tr>
-                        <th>Rating</th>
-                        <th>Client</th>
-                        <th>Message</th>
-                        <th>Techs</th>
+                        <th class="col-xs-1">Rating</th>
+                        <th class="col-xs-2">Client</th>
+                        <th class="col-xs-6">Message</th>
+                        <th class="col-xs-3">Techs</th>
                     </tr>
                     </thead>
-                    <tbody>
-                    <tr ng-repeat="item in jobs">
+                    <tbody infinite-scroll='loadMoreJobs()' infinite-scroll-distance='0'
+                           infinite-scroll-disabled='api.jobs.busy || api.jobs.done'>
+                    <tr ng-repeat="job in jobs | orderBy:'-completed' track by job.id">
                         <td class="feedback-rating nowrap">
-                            <p><span class="level-{$ item.company_feedback.level.value $} glyphicon glyphicon-star"></span>{$ item.company_feedback.level.title $}</p>
+                            <p>
+                                <span class="level-{$ job.company_feedback.level.value $} glyphicon glyphicon-star"></span>
+                                {$ job.company_feedback.level.title $}
+                            </p>
                         </td>
-                        <td class="feedback-contact">{$ item.contact.contact_id $}</td>
-                        <td class="feedback-message">{$ item.company_feedback.message != 0 ? item.company_feedback.message : "" $}</td>
+                        <td class="feedback-contact">{$ job.contact.contact_id $}</td>
+                        <td class="feedback-message">{$ job.id $} -- {$ job.company_feedback.message != 0 ?
+                            job.company_feedback.message : "" $}
+                        </td>
                         <td class="feedback-techs">
-                            <a target="_blank" ng-href="{% url 'clean:technicians' %}{$ tech.user $}" ng-repeat="tech in item.techs">{$ tech.name $}{$ !$last ? ", " : "" $}</a>
+                            <a target="_blank" ng-href="{% url 'clean:technicians' %}{$ tech.user $}"
+                               ng-repeat="tech in job.techs">{$ tech.name $}{$ !$last ? ", " : "" $}</a>
                         </td>
                     </tr>
                     </tbody>
                 </table>
+                <div>
+                    <p ng-show="api.jobs.busy">Loading...</p>
+                    <p ng-show="api.jobs.done">All results fetched</p>
+                </div>
+                {#                <button ng-click="loadMoreJobs();">More</button>#}
             </div>
         </div>
     </div>

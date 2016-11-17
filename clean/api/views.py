@@ -11,6 +11,9 @@ class JobCollection(generics.ListAPIView):
     queryset = models.Job.objects.all()
     serializer_class = my_serializers.JobSerializer
     filter_class = my_filters.JobFilter
+    filter_backends = (filters.OrderingFilter,)
+    ordering_fields = ('completed',)
+    ordering = ('-completed',)
 
 
 class FeedbackCollection(generics.ListAPIView,):

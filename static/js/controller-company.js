@@ -59,20 +59,28 @@ cleanApp.service('CleanAPI', function ($http) {
 
 });
 
-cleanApp.controller('companyController', function ($scope, $http, $timeout, $filter, CleanAPI) {
+cleanApp.controller('companyController', function ($scope, $http, $timeout, $filter, $location) {
     $scope.loading = false;
     $scope.total = 0;
     $scope.totals = {};
     $scope.feedback = {};
     $scope.jobs = [];
     $scope.levels = [];
-
     $scope.active_range = "this";
 
-    $scope.date_to = new Date();
-    $scope.date_from = new Date();
-    $scope.date_from = getMonday($scope.date_to);
-
+    var searchObject = $location.search();
+    if (searchObject.date_to) {
+        $scope.date_to = new Date(searchObject.date_to);
+    } else {
+        $scope.date_to = new Date();
+    }
+    if (searchObject.date_from) {
+        $scope.date_from = new Date(searchObject.date_from);
+    } else {
+        $scope.date_from = new Date();
+        $scope.date_from = getMonday($scope.date_to);
+    }
+    
     $scope.api = {};
     $scope.api.default = {
         url: "",
@@ -136,7 +144,9 @@ cleanApp.controller('companyController', function ($scope, $http, $timeout, $fil
         }
         $scope.api.default.data.date_from = updateFormattedDate($scope.date_from);
         $scope.api.default.data.date_to = updateFormattedDate($scope.date_to);
-        console.log($scope.api.default.data);
+
+        $location.search('date_from', $scope.api.default.data.date_from);
+        $location.search('date_to', $scope.api.default.data.date_to);
         getJobs($scope.api.default);
         getLevels($scope.api.default);
     };
@@ -223,5 +233,13 @@ cleanApp.controller('companyController', function ($scope, $http, $timeout, $fil
         var diff = d.getDate() - day + 5;
         return new Date(d.setDate(diff));
     }
+
+    function getParameterByName(name) {
+        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+            results = regex.exec(location.search);
+        return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    }
+
 
 });

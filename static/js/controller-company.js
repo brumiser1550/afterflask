@@ -69,18 +69,22 @@ cleanApp.controller('companyController', function ($scope, $http, $timeout, $fil
     $scope.active_range = "this";
 
     var searchObject = $location.search();
+    var offset = new Date().getTimezoneOffset() * 60000;
     if (searchObject.date_to) {
+        $scope.active_range = "custom";
         $scope.date_to = new Date(searchObject.date_to);
+        $scope.date_to.setTime($scope.date_to.getTime() + offset);
     } else {
         $scope.date_to = new Date();
     }
     if (searchObject.date_from) {
+        $scope.active_range = "custom";
         $scope.date_from = new Date(searchObject.date_from);
+        $scope.date_from.setTime($scope.date_from.getTime() + offset);
     } else {
         $scope.date_from = new Date();
         $scope.date_from = getMonday($scope.date_to);
     }
-    
     $scope.api = {};
     $scope.api.default = {
         url: "",

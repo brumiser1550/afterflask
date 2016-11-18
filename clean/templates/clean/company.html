@@ -8,7 +8,7 @@
     <div ng-controller="companyController">
         <div class="container">
             <section class="text-center">
-                <div class="btn-group" role="group" aria-label="...">
+                <div class="btn-group" role="group">
                     <button type="button" class="btn btn-lg" ng-disabled="api.jobs.busy"
                             ng-click="active_range = 'this'; updateDateRange();"
                             ng-class="active_range == 'this' ? 'btn-info' : 'btn-default'">This Week
@@ -25,7 +25,6 @@
             </section>
             <section class="form-inline text-center" ng-show="active_range == 'custom'">
                 <div class="form-group">
-                    <label class="sr-only" for="exampleInputAmount">Amount (in dollars)</label>
                     <div class="input-group">
                         <input type="text" class="form-control" uib-datepicker-popup="yyyy-MM-dd"
                                ng-model="date_from" placeholder="From"
@@ -39,7 +38,6 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="sr-only" for="exampleInputAmount">Amount (in dollars)</label>
                     <div class="input-group">
                         <input type="text" class="form-control" uib-datepicker-popup="yyyy-MM-dd"
                                ng-model="date_to" placeholder="To"

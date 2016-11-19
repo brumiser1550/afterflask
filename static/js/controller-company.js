@@ -59,20 +59,32 @@ cleanApp.service('CleanAPI', function ($http) {
 
 });
 
-cleanApp.controller('companyController', function ($scope, $http, $timeout, $filter, CleanAPI) {
+cleanApp.controller('companyController', function ($scope, $http, $timeout, $filter, $location) {
     $scope.loading = false;
     $scope.total = 0;
     $scope.totals = {};
     $scope.feedback = {};
     $scope.jobs = [];
     $scope.levels = [];
-
     $scope.active_range = "this";
 
-    $scope.date_to = new Date();
-    $scope.date_from = new Date();
-    $scope.date_from = getMonday($scope.date_to);
-
+    var searchObject = $location.search();
+    var offset = new Date().getTimezoneOffset() * 60000;
+    if (searchObject.date_to) {
+        $scope.active_range = "custom";
+        $scope.date_to = new Date(searchObject.date_to);
+        $scope.date_to.setTime($scope.date_to.getTime() + offset);
+    } else {
+        $scope.date_to = new Date();
+    }
+    if (searchObject.date_from) {
+        $scope.active_range = "custom";
+        $scope.date_from = new Date(searchObject.date_from);
+        $scope.date_from.setTime($scope.date_from.getTime() + offset);
+    } else {
+        $scope.date_from = new Date();
+        $scope.date_from = getMonday($scope.date_to);
+    }
     $scope.api = {};
     $scope.api.default = {
         url: "",
@@ -106,7 +118,7 @@ cleanApp.controller('companyController', function ($scope, $http, $timeout, $fil
         $timeout(function () {
             $scope.timeout = 1000000000;
             getJobs($scope.api.default);
-            getLevels();
+            getLevels($scope.api.default);
             sync();
         }, $scope.timeout);
     };
@@ -123,6 +135,7 @@ cleanApp.controller('companyController', function ($scope, $http, $timeout, $fil
     };
 
     $scope.updateDateRange = function () {
+        $scope.jobs = [];
         if ($scope.active_range == "this") {
             $scope.date_to = new Date();
             $scope.date_from = getMonday($scope.date_to);
@@ -133,6 +146,13 @@ cleanApp.controller('companyController', function ($scope, $http, $timeout, $fil
             $scope.date_from = getMonday($scope.date_to);
             $scope.date_to = getFriday($scope.date_to);
         }
+        $scope.api.default.data.date_from = updateFormattedDate($scope.date_from);
+        $scope.api.default.data.date_to = updateFormattedDate($scope.date_to);
+
+        $location.search('date_from', $scope.api.default.data.date_from);
+        $location.search('date_to', $scope.api.default.data.date_to);
+        getJobs($scope.api.default);
+        getLevels($scope.api.default);
     };
 
     $scope.dateOptions = {
@@ -155,13 +175,14 @@ cleanApp.controller('companyController', function ($scope, $http, $timeout, $fil
     };
 
 
-    function getLevels() {
+    function getLevels(params) {
         $http({
             method: 'GET',
             url: '/api/v1/feedback-levels/',
-            params: $scope.api.levels.data
+            params: params.data
         }).then(function (response) {
             console.log(response);
+            $scope.response_rate = 0;
             $scope.levels = response.data.results;
             angular.forEach(response.data.results, function (value, key) {
                 $scope.total_feedback += value.count;
@@ -216,5 +237,13 @@ cleanApp.controller('companyController', function ($scope, $http, $timeout, $fil
         var diff = d.getDate() - day + 5;
         return new Date(d.setDate(diff));
     }
+
+    function getParameterByName(name) {
+        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+            results = regex.exec(location.search);
+        return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    }
+
 
 });

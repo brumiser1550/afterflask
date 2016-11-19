@@ -45,6 +45,10 @@ a {
  * Various other styles
  ****************************************************************************/
 
+section {
+    margin: 5px 0;
+}
+
 /* Various other styles end */
 
 #content {

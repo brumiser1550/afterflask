@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from django.db.models import Avg
+from django.db.models import Avg, Count
 from rest_framework import serializers
 from .. import models
 
@@ -16,10 +16,11 @@ class TechnicianSerializer(serializers.ModelSerializer):
     """ This serializer is getting the data for a Technician. """
     type_title = serializers.SerializerMethodField()
     weekly_scores = serializers.SerializerMethodField()
+    feedback_totals = serializers.SerializerMethodField()
 
     class Meta:
         model = models.Technician
-        fields = ('name', 'user', 'type', 'type_title', 'weekly_scores')
+        fields = ('name', 'user', 'type', 'type_title', 'weekly_scores', 'feedback_totals')
 
     def get_type_title(self, obj):
         return obj.get_type_display()
@@ -55,6 +56,12 @@ class TechnicianSerializer(serializers.ModelSerializer):
                 'week3': week3_score,
                 'week4': week4_score}
 
+    def get_feedback_totals(self, obj):
+        tech_feedback = models.Feedback.objects.filter(tech=obj)
+        feedback = tech_feedback.values("tech",
+                                        "level__title").annotate(Count("level__value")).order_by()
+        return [{'title': x['level__title'],
+                 'total': x['level__value__count']} for x in feedback]
 
 class FeedbackLevelSerializer(serializers.ModelSerializer):
     """ This serializer is getting the data for a Feedback Level. """

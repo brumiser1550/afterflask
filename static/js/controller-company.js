@@ -34,6 +34,7 @@ cleanApp.controller('companyController', function ($scope, $http, $timeout) {
     sync();
 
     $scope.fetchNewData = function () {
+        $scope.api.jobs = $scope.api.default;
         $scope.jobs = [];
         getJobs($scope.api.default);
         getLevels($scope.api.default);

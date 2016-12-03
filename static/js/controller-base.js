@@ -38,6 +38,30 @@ cleanApp.controller('reviewsController', function ($scope, $http, $location, $an
         date_from: ""
     };
 
+    $scope.getMonday = function (d) {
+        d = new Date(d);
+        var day = d.getDay();
+        var diff = d.getDate() - day + (day == 0 ? -6 : 1); // adjust when day is sunday
+        return new Date(d.setDate(diff));
+    };
+
+    $scope.getFriday = function (d) {
+        d = new Date(d);
+        var day = d.getDay();
+        var diff = d.getDate() - day + 5;
+        return new Date(d.setDate(diff));
+    };
+
+    $scope.containsObject = function (obj, list) {
+        var i;
+        for (i = 0; i < list.length; i++) {
+            if (angular.equals(list[i], obj)) {
+                return true;
+            }
+        }
+        return false;
+    };
+
     var searchObject = $location.search();
     var offset = new Date().getTimezoneOffset() * 60000;
     if (searchObject.date_to) {
@@ -106,37 +130,12 @@ cleanApp.controller('reviewsController', function ($scope, $http, $location, $an
         $scope.date.date_to_pop.opened = true;
     };
 
-    $scope.getMonday = function (d) {
-        d = new Date(d);
-        var day = d.getDay();
-        var diff = d.getDate() - day + (day == 0 ? -6 : 1); // adjust when day is sunday
-        return new Date(d.setDate(diff));
-    };
-
-    $scope.getFriday = function (d) {
-        d = new Date(d);
-        var day = d.getDay();
-        var diff = d.getDate() - day + 5;
-        return new Date(d.setDate(diff));
-    };
-
-    $scope.containsObject = function (obj, list) {
-        var i;
-        for (i = 0; i < list.length; i++) {
-            if (angular.equals(list[i], obj)) {
-                return true;
-            }
-        }
-        return false;
-    };
-
     $scope.getParameterByName = function (name) {
         name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
         var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
             results = regex.exec(location.search);
         return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
     };
-
 
     $scope.months = [{
         value: "01",

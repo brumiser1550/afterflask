@@ -66,3 +66,20 @@ class Feedback(models.Model):
 class Acknowledgement(models.Model):
     feedback = models.ForeignKey(Feedback)
     message = models.TextField(blank=True)
+
+
+class UploadedData(models.Model):
+    """ UploadedData Model
+
+    """
+    FILE_TYPES = (('S1', 'Sheet 1'),
+                  ('S2', 'Sheet 2'))
+    uploaded_by = models.ForeignKey(User)
+    uploaded_on = models.DateTimeField(auto_now_add=True)
+    data = models.FileField(upload_to='uploads/')
+    file_type = models.CharField(max_length=10, choices=FILE_TYPES)
+
+    def __str__(self):
+        return "{} - Uploaded By: {} - Uploaded On: {}".format(self.file_type,
+                                                               self.uploaded_by,
+                                                               self.uploaded_on)

@@ -17,10 +17,12 @@ class TechnicianSerializer(serializers.ModelSerializer):
     type_title = serializers.SerializerMethodField()
     weekly_scores = serializers.SerializerMethodField()
     feedback_totals = serializers.SerializerMethodField()
+    all_time_gold = serializers.SerializerMethodField()
 
     class Meta:
         model = models.Technician
-        fields = ('name', 'user', 'type', 'type_title', 'weekly_scores', 'feedback_totals')
+        fields = ('name', 'user', 'type', 'type_title',
+                  'weekly_scores', 'feedback_totals', 'all_time_gold')
 
     def get_type_title(self, obj):
         return obj.get_type_display()
@@ -62,6 +64,14 @@ class TechnicianSerializer(serializers.ModelSerializer):
                                         "level__title").annotate(Count("level__value")).order_by()
         return [{'title': x['level__title'],
                  'total': x['level__value__count']} for x in feedback]
+
+    def get_all_time_gold(self, obj):
+        # What should the result be if null, 0?  Same issue in week scores.
+        score = models.Feedback.objects.filter(tech=obj,
+                                               level__value__gt=0)
+        score = score.aggregate(Avg('level__value'))['level__value__avg']
+        return score
+
 
 class FeedbackLevelSerializer(serializers.ModelSerializer):
     """ This serializer is getting the data for a Feedback Level. """
@@ -120,3 +130,17 @@ class FeedbackSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Feedback
         fields = ('id', 'job', 'tech', 'level', 'message')
+
+
+class UploadedDataSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.UploadedData
+        fields = ('id', 'uploaded_by', 'uploaded_on', 'data', 'file_type')
+
+
+class UploadedDataPostSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.UploadedData
+        fields = ('id', 'data', 'file_type')

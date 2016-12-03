@@ -47,3 +47,11 @@ class TechnicianFilter(django_filters.FilterSet):
     class Meta:
         model = models.Technician
         fields = ['name', 'type']
+
+
+class UploadedDataFilter(django_filters.FilterSet):
+    id = IntegerListFilter(name='id', lookup_type='in')
+
+    class Meta:
+        model = models.UploadedData
+        fields = ['id', 'uploaded_by', 'uploaded_on', 'file_type']

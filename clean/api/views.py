@@ -1,6 +1,8 @@
 from rest_framework import generics
 from rest_framework import filters
 from rest_framework import mixins
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
 from .. import models
 from . import serializers as my_serializers
 from . import filters as my_filters
@@ -74,3 +76,24 @@ class TechnicianDetail(generics.RetrieveAPIView):
     def get_queryset(self):
         user = self.kwargs['pk']
         return models.Technician.objects.filter(user=user)
+
+
+class UploadedDataCollection(generics.ListAPIView,
+                             mixins.CreateModelMixin):
+    queryset = models.UploadedData.objects.all()
+    authentication_classes = (SessionAuthentication, BasicAuthentication)
+    permission_classes = (IsAuthenticated,)
+    serializer_class = my_serializers.UploadedDataSerializer
+    filter_class = my_filters.UploadedDataFilter
+
+    def get_serializer_class(self):
+        """This method provides the appropriate serializer."""
+        if self.request.method == 'POST':
+            return my_serializers.UploadedDataPostSerializer
+        return self.serializer_class
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
+    def perform_create(self, serializer):
+        serializer.save(uploaded_by=self.request.user)

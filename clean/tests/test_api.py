@@ -11,7 +11,7 @@ class JsonViewTests(TestCase):
     """ All pages should:
 
         1. Resolve to the proper View
-        2. Return a 200 (login_required urls return 302 if not logged in)
+        2. Return a 200 (login_required urls return 403 if not logged in)
 
     """
     fixtures = ['data/tests_auth_users.json']
@@ -80,5 +80,17 @@ class JsonViewTests(TestCase):
         view = resolve(url)
         self.assertEqual(view.func.__name__,
                          views.TechnicianDetail.__name__)
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 200)
+
+    def test_uploadeddata_cikkectuion_resolves(self):
+        url = reverse('api_clean:uploaded_data_collection',
+                      args=[])
+        view = resolve(url)
+        self.assertEqual(view.func.__name__,
+                         views.UploadedDataCollection.__name__)
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 403)
+        self.client.login(username='test_admin_user', password='razzle01')
         response = self.client.get(url)
         self.assertEquals(response.status_code, 200)

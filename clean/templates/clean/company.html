@@ -8,28 +8,31 @@
     <div ng-controller="companyController">
         <div class="container">
             <section class="text-center">
-                <div class="btn-group" role="group" aria-label="...">
+                <div class="btn-group" role="group">
                     <button type="button" class="btn btn-lg" ng-disabled="api.jobs.busy"
-                            ng-click="active_range = 'this'; updateDateRange();"
-                            ng-class="active_range == 'this' ? 'btn-info' : 'btn-default'">This Week
+                            ng-click="date.active_range = 'this'; updateDateRange();"
+                            ng-class="date.active_range == 'this' ? 'btn-info' : 'btn-default'">This Week
                     </button>
                     <button type="button" class="btn btn-lg" ng-disabled="api.jobs.busy"
-                            ng-click="active_range = 'last'; updateDateRange();"
-                            ng-class="active_range == 'last' ? 'btn-info' : 'btn-default'">Last Week
+                            ng-click="date.active_range = 'last'; updateDateRange();"
+                            ng-class="date.active_range == 'last' ? 'btn-info' : 'btn-default'">Last Week
                     </button>
-                    <button type="button" class="btn btn-lg" ng-disabled="api.jobs.busy"
-                            ng-click="active_range = 'custom'"
-                            ng-class="active_range == 'custom' ? 'btn-info' : 'btn-default'">Custom
+{#                    <button type="button" class="btn btn-lg" ng-disabled="api.jobs.busy"#}
+{#                            ng-click="date.active_range = 'custom'"#}
+{#                            ng-class="date.active_range == 'custom' ? 'btn-info' : 'btn-default'">Custom#}
+{#                    </button>#}
+                    <button type="button" class="btn btn-lg btn-success" ng-disabled="api.jobs.busy"
+                            ng-click="fetchNewData();">Update
                     </button>
                 </div>
             </section>
-            <section class="form-inline text-center" ng-show="active_range == 'custom'">
+{#            <section class="form-inline text-center" ng-show="active_range == 'custom'">#}
+            <section class="form-inline text-center">
                 <div class="form-group">
-                    <label class="sr-only" for="exampleInputAmount">Amount (in dollars)</label>
                     <div class="input-group">
                         <input type="text" class="form-control" uib-datepicker-popup="yyyy-MM-dd"
-                               ng-model="date_from" placeholder="From"
-                               datepicker-options="dateOptions" is-open="date_from_pop.opened"
+                               ng-model="date.date_from" placeholder="From" ng-change="date.active_range = 'custom'; updateDateRange();"
+                               datepicker-options="dateOptions" is-open="date.date_from_pop.opened"
                                close-text="Close" id="completed__date"/>
                         <div class="input-group-btn">
                             <button type="button" class="btn btn-default" ng-click="openDateFromPop()">
@@ -39,11 +42,10 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="sr-only" for="exampleInputAmount">Amount (in dollars)</label>
                     <div class="input-group">
                         <input type="text" class="form-control" uib-datepicker-popup="yyyy-MM-dd"
-                               ng-model="date_to" placeholder="To"
-                               datepicker-options="dateOptions" is-open="date_to_pop.opened"
+                               ng-model="date.date_to" placeholder="To" ng-change="date.active_range = 'custom'; updateDateRange();"
+                               datepicker-options="dateOptions" is-open="date.date_to_pop.opened"
                                close-text="Close" id="completed__date"/>
                         <div class="input-group-btn">
                             <button type="button" class="btn btn-default" ng-click="openDateToPop()">
@@ -52,9 +54,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-group">
-                    <button type="submit" class="btn btn-info btn-block" ng-click="updateDateRange();">Update</button>
-                </div>
+{#                <div class="form-group">#}
+{#                    <button type="submit" class="btn btn-info btn-block" ng-click="updateDateRange();">Update</button>#}
+{#                </div>#}
             </section>
             <section class="mini-charts" ng-show="levels.length > 0">
                 <div class="row text-center">
@@ -97,7 +99,7 @@
                             job.company_feedback.message : "" $}
                         </td>
                         <td class="feedback-techs">
-                            <a target="_blank" ng-href="{% url 'clean:technicians' %}{$ tech.user $}"
+                            <a target="_blank" ng-href="{% url 'clean:technicians' %}{$ tech.user + query_string $}"
                                ng-repeat="tech in job.techs">{$ tech.name $}{$ !$last ? ", " : "" $}</a>
                         </td>
                     </tr>

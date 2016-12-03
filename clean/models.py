@@ -1,6 +1,6 @@
-from django.db import models
+from django.db import models, transaction, IntegrityError
 from django.contrib.auth.models import User
-
+from .validators import import_document_validator
 
 class Technician(models.Model):
     TYPES = (
@@ -83,3 +83,15 @@ class UploadedData(models.Model):
         return "{} - Uploaded By: {} - Uploaded On: {}".format(self.file_type,
                                                                self.uploaded_by,
                                                                self.uploaded_on)
+
+    def save(self, force_insert=False, force_update=False,
+             using=None, update_fields=None, *args, **kwargs):
+        """It may be a bad idea to do all this processing here but here it is
+
+        """
+        try:
+            with transaction.atomic():
+                import_document_validator(self.data, self.file_type)
+                super(UploadedData, self).save(*args, **kwargs)
+        except IntegrityError as e:
+            print(e.message)

@@ -83,7 +83,7 @@ class JsonViewTests(TestCase):
         response = self.client.get(url)
         self.assertEquals(response.status_code, 200)
 
-    def test_uploadeddata_cikkectuion_resolves(self):
+    def test_uploadeddata_collection_resolves(self):
         url = reverse('api_clean:uploaded_data_collection',
                       args=[])
         view = resolve(url)

@@ -18,8 +18,8 @@ data = [Row(*row.strip().split(',')) for row in f.readlines()
 f.close()
 
 contacts = list(set([row.contact_id for row in data[1:]
-            if row.job_id.isnumeric()
-            and row.contact_id.isnumeric()]))
+            if row.job_id.isdigit()
+            and row.contact_id.isdigit()]))
 
 for contact in contacts:
     new_contact = models.Contact(contact_id=contact)
@@ -28,7 +28,7 @@ for contact in contacts:
 jobs = [(int(row.job_id),
          datetime.strptime(row.job_scheduled, '%m/%d/%Y'),
          int(row.contact_id))
-        for row in data[1:] if row.job_id.isnumeric()]
+        for row in data[1:] if row.job_id.isdigit()]
 
 for job in jobs:
     contact = models.Contact.objects.filter(contact_id=job[2]).first()
@@ -61,7 +61,7 @@ for level, title in levels.items():
     new_feedback_score = models.FeedbackLevel(value=int(level), title=title).save()
 
 for row in data[1:]:
-    if row.job_id.isnumeric():
+    if row.job_id.isdigit():
         feedback_score = models.FeedbackLevel.objects.filter(value=row.feedback_score).first()
         job = models.Job.objects.filter(job_id=int(row.job_id)).first()
         new_feedback = models.Feedback(job=job,

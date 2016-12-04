@@ -1,6 +1,6 @@
 from django.db import models, transaction, IntegrityError
 from django.contrib.auth.models import User
-from .validators import import_document_validator
+from .validators import import_document_validator, import_document_processor
 
 class Technician(models.Model):
     TYPES = (
@@ -23,8 +23,8 @@ class Contact(models.Model):
     name_last = models.CharField(max_length=60, null=True, blank=True )
     phone = models.CharField(max_length=12, null=True, blank=True)
     address = models.TextField(max_length=240, null=True, blank=True)
-    email = models.EmailField(null=True, blank=True)
-    contact_id = models.IntegerField()
+    email = models.EmailField(null=True, blank=True, unique=True)
+    contact_id = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
         return "Contact: {} {} - email: {}".format(self.name_first, self.name_last, self.email)
@@ -32,10 +32,12 @@ class Contact(models.Model):
 
 class Job(models.Model):
     scheduled = models.DateTimeField()
-    completed = models.DateTimeField()
+    completed = models.DateTimeField(blank=True, null=True)
     job_id = models.IntegerField()
     contact = models.ForeignKey(Contact, null=True)
-    company_feedback = models.ForeignKey('Feedback', blank=True, null=True, related_name='job_feedback')
+    company_feedback = models.ForeignKey('Feedback',
+                                         blank=True, null=True,
+                                         related_name='job_feedback')
 
     def __str__(self):
         return "Job {} - job_id: {} Scheduled: {}  Completed: {}".format(self.pk, self.job_id, self.scheduled, self.completed)
@@ -56,7 +58,7 @@ class FeedbackLevel(models.Model):
 class Feedback(models.Model):
     job = models.ForeignKey(Job)
     level = models.ForeignKey(FeedbackLevel)
-    message = models.TextField(blank=True)
+    message = models.TextField(blank=True, null=True)
     tech = models.ForeignKey(Technician, null=True, blank=True)
 
     def __str__(self):
@@ -93,5 +95,6 @@ class UploadedData(models.Model):
             with transaction.atomic():
                 import_document_validator(self.data, self.file_type)
                 super(UploadedData, self).save(*args, **kwargs)
+                import_document_processor(self.data, self.file_type)
         except IntegrityError as e:
             print(e.message)

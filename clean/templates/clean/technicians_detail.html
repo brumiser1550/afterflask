@@ -5,7 +5,8 @@
 {% block body_class %}technician-detail{% endblock %}
 
 {% block content %}
-    <div ng-controller="technicianController" ng-init="user = {{ pk }}" class="technician-detail">
+    {#    <div ng-controller="technicianController" ng-init="user = {{ pk }}" class="technician-detail">#}
+    <div ng-controller="technicianController" class="technician-detail">
         <div class="jumbotron">
             <div class="container">
                 <h1>{$ technician.name $}
@@ -15,10 +16,18 @@
         </div>
         <div class="weekly-scores">
             <div class="container">
-                <div class="col-sm-3 weekly-score">W1: {$ technician.weekly_scores.week1 ?  technician.weekly_scores.week1 : 0 $}%</div>
-                <div class="col-sm-3 weekly-score">W2: {$ technician.weekly_scores.week2 ?  technician.weekly_scores.week2 : 0 $}%</div>
-                <div class="col-sm-3 weekly-score">W3: {$ technician.weekly_scores.week3 ?  technician.weekly_scores.week3 : 0 $}%</div>
-                <div class="col-sm-3 weekly-score">W4: {$ technician.weekly_scores.week4 ?  technician.weekly_scores.week4 : 0 $}%</div>
+                <div class="col-sm-3 weekly-score">W1: {$ technician.weekly_scores.week1 ?
+                    technician.weekly_scores.week1 : 0 $}%
+                </div>
+                <div class="col-sm-3 weekly-score">W2: {$ technician.weekly_scores.week2 ?
+                    technician.weekly_scores.week2 : 0 $}%
+                </div>
+                <div class="col-sm-3 weekly-score">W3: {$ technician.weekly_scores.week3 ?
+                    technician.weekly_scores.week3 : 0 $}%
+                </div>
+                <div class="col-sm-3 weekly-score">W4: {$ technician.weekly_scores.week4 ?
+                    technician.weekly_scores.week4 : 0 $}%
+                </div>
             </div>
         </div>
         <div class="container">
@@ -29,7 +38,8 @@
                             <small>{$ average_score_percent | number:0 $}%</small>
                         </h2>
                         <uib-progress>
-                            <uib-bar ng-repeat="level in levels track by $index" value="level.percent"
+                            <uib-bar ng-repeat="level in technician.feedback_totals track by $index"
+                                     value="level.percent"
                                      type="level-{$ level.value $}">
                                 <span>{$ level.percent | number:2 $}%</span>
                             </uib-bar>
@@ -38,40 +48,42 @@
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="table-responsive">
-                        <table class="table table-striped table-hover">
-                            <thead>
-                            <tr>
-                                <th>Rating</th>
-                                <th>Client</th>
-                                <th>Date</th>
-                                <th>Message</th>
-                                <th>Alerts</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr ng-repeat="item in feedback">
-                                <td class="feedback-rating nowrap">
-                                    <p>
-                                        <span class="level-{$ item.level.value $} glyphicon glyphicon-star"></span>
-                                        {$ item.level.title $}
-                                    </p>
-                                </td>
-                                <td class="feedback-contact">{$ item.job.contact.contact_id $}</td>
-                                <td class="feedback-date">{$ item.job.completed | date:'yyyy-MM-dd' $}</td>
-                                <td class="feedback-message">{$ item.message != 0 ? item.message : "" $}</td>
-                                <td class="feedback-message">{$ item.alerts != 0 ? item.alerts : "" $}</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
+            <section class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                    <tr>
+                        <th class="col-xs-1">Rating</th>
+                        <th class="col-xs-2">Date</th>
+                        <th class="col-xs-2">Client</th>
+                        <th class="col-xs-6">Message</th>
+                        <th class="col-xs-1">Alerts</th>
+                    </tr>
+                    </thead>
+                    <tbody infinite-scroll='loadMoreFeedback()' infinite-scroll-distance='0'
+                           infinite-scroll-disabled='api.feedback.busy || api.feedback.done'>
+                    <tr ng-repeat="item in feedback | orderBy:'-completed' track by item.job.id">
+                        <td class="feedback-rating nowrap">
+                            <p>
+                                <span class="level-{$ item.job.company_feedback.level.value $} glyphicon glyphicon-star"></span>
+                                {$ item.job.company_feedback.level.title $}
+                            </p>
+                        </td>
+                        <td class="feedback-date">{$ item.job.completed | date:'yyyy-MM-dd' $}</td>
+                        <td class="feedback-contact">{$ item.job.contact.contact_id $}</td>
+                        <td class="feedback-message">{$ item.job.id $} -- {$ item.job.company_feedback.message != 0 ?
+                            item.job.company_feedback.message : "" $}
+                        </td>
+                        <td class="feedback-alerts">{$ item.alerts != 0 ? item.alerts : "" $}</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div>
+                    <p ng-show="api.feedback.busy">Loading...</p>
+                    <p ng-show="api.feedback.done">All results fetched</p>
                 </div>
-            </div>
+            </section>
         </div> <!-- /container -->
     </div>
-
 {% endblock %}
 
 {% block controllers %}

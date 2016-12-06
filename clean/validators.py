@@ -9,6 +9,7 @@ import csv
 from datetime import datetime
 
 from django.core.exceptions import ValidationError
+from django.contrib.auth.models import User
 
 import models
 
@@ -132,16 +133,30 @@ def import_document_processor(document, file_type):
             job.save()
 
             for tech in techs:
-                print(techs, tech)
+                print("CREATING TECH AND USER")
+                tech_name = "{}".format(tech)
+                tech_email = "{}@naturalcarecleaningservice.com".format(tech.replace(' ', '.'))
+                print(tech, tech_email)
                 tech = models.Technician.objects.filter(name=tech)
+                user = User.objects.filter(email=email) | User.objects.filter(username=tech_name)
                 if not tech.exists():
-                    print("TECH THAT DOESN'T EXIST")
-                    continue
+                    user = user.first()
+                    if user is None:
+                        user = User.objects.create_user(tech_name,
+                                                        tech_email,
+                                                        'johnpassword')
+                        user.save()
+
+                    tech = models.Technician.objects.create(name=tech_name,
+                                                            user=user,
+                                                            type='4')
                 else:
                     # Should probably check to make sure that
                     # we are not pulling more than one here
                     tech = tech.first()
-
+                print(job.job_id, tech.name, tech.user.email, tech.user.username)
+                print("CREATED TECH AND USER")
+                print("CREATING FEEDBACK")
                 feedback = models.Feedback.objects.filter(job=job, tech=tech)
                 if not feedback.exists():
                     feedback = models.Feedback.objects.create(job=job,
@@ -152,5 +167,5 @@ def import_document_processor(document, file_type):
                     # Should probably check to make sure that
                     # we are not pulling more than one here
                     feedback = feedback.first()
+                print("CREATED FEEDBACK")
     return True
-

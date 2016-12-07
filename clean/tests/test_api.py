@@ -1,6 +1,8 @@
+import json
 from django.test import TestCase
 from django.core.urlresolvers import resolve, reverse
 from django.contrib.auth.models import User
+from django.core.files.uploadedfile import SimpleUploadedFile
 from rest_framework.test import APIRequestFactory, force_authenticate
 from ..api import views
 from ..api import serializers
@@ -14,7 +16,8 @@ class JsonViewTests(TestCase):
         2. Return a 200 (login_required urls return 403 if not logged in)
 
     """
-    fixtures = ['data/tests_auth_users.json']
+    fixtures = ['data/tests_auth_users.json',
+                'data/tests_FeedbackLevel.json']
 
     @classmethod
     def setUpClass(cls):
@@ -94,3 +97,44 @@ class JsonViewTests(TestCase):
         self.client.login(username='test_admin_user', password='razzle01')
         response = self.client.get(url)
         self.assertEquals(response.status_code, 200)
+        f = open('clean/fixtures/data/tests_Sheet1.csv', 'r')
+        sheet1_data = SimpleUploadedFile('Sheet1.csv',
+                                         f.read())
+        response = self.client.post(url, {'file_type': 'S1',
+                                          'uploaded_by': 'user',
+                                          'data': sheet1_data}
+                                    )
+        self.assertEquals(response.status_code, 201)
+        response = self.client.get(url)
+
+        # If this job exists jobs were created, techs should be empty
+        url = reverse('api_clean:job_collection',
+                      args=[]) + '?job_id=61669'
+
+        response = self.client.get(url)
+        data = json.loads(response.content)
+        techs = data['results'][0]['techs']
+        self.assertEqual(len(techs), 0)
+
+        url = reverse('api_clean:uploaded_data_collection',
+                      args=[])
+
+        f = open('clean/fixtures/data/tests_Sheet2.csv', 'r')
+        sheet2_data = SimpleUploadedFile('Sheet2.csv',
+                                         f.read())
+        response = self.client.post(url, {'file_type': 'S2',
+                                          'uploaded_by': 'user',
+                                          'data': sheet2_data}
+                                    )
+        self.assertEquals(response.status_code, 201)
+
+        # Things probably worked if this has techs on it
+        url = reverse('api_clean:job_collection',
+                      args=[]) + '?job_id=61669'
+        response = self.client.get(url)
+        data = json.loads(response.content)
+        techs = data['results'][0]['techs']
+        self.assertGreater(len(techs), 0)
+
+
+

@@ -3,6 +3,7 @@ from rest_framework import filters
 from rest_framework import mixins
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
+from django_filters.rest_framework import DjangoFilterBackend
 from .. import models
 from . import serializers as my_serializers
 from . import filters as my_filters
@@ -14,7 +15,7 @@ class JobCollection(generics.ListAPIView):
     model = models.Job
     serializer_class = my_serializers.JobSerializer
     filter_class = my_filters.JobFilter
-    filter_backends = (filters.OrderingFilter,)
+    filter_backends = (filters.OrderingFilter, DjangoFilterBackend)
     ordering_fields = ('completed',)
     ordering = ('-completed',)
 

@@ -1,0 +1,42 @@
+[
+  {
+    "model": "clean.feedbacklevel",
+    "pk": 1,
+    "fields": {
+      "title": "No Rating",
+      "value": 0
+    }
+  },
+  {
+    "model": "clean.feedbacklevel",
+    "pk": 2,
+    "fields": {
+      "title": "Red",
+      "value": 1
+    }
+  },
+  {
+    "model": "clean.feedbacklevel",
+    "pk": 3,
+    "fields": {
+      "title": "Yellow",
+      "value": 2
+    }
+  },
+  {
+    "model": "clean.feedbacklevel",
+    "pk": 4,
+    "fields": {
+      "title": "Green",
+      "value": 3
+    }
+  },
+  {
+    "model": "clean.feedbacklevel",
+    "pk": 5,
+    "fields": {
+      "title": "Gold",
+      "value": 4
+    }
+  }
+]

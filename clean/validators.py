@@ -133,10 +133,8 @@ def import_document_processor(document, file_type):
             job.save()
 
             for tech in techs:
-                print("CREATING TECH AND USER")
                 tech_name = "{}".format(tech)
                 tech_email = "{}@naturalcarecleaningservice.com".format(tech.replace(' ', '.'))
-                print(tech, tech_email)
                 tech = models.Technician.objects.filter(name=tech)
                 user = User.objects.filter(email=email) | User.objects.filter(username=tech_name)
                 if not tech.exists():
@@ -154,9 +152,6 @@ def import_document_processor(document, file_type):
                     # Should probably check to make sure that
                     # we are not pulling more than one here
                     tech = tech.first()
-                print(job.job_id, tech.name, tech.user.email, tech.user.username)
-                print("CREATED TECH AND USER")
-                print("CREATING FEEDBACK")
                 feedback = models.Feedback.objects.filter(job=job, tech=tech)
                 if not feedback.exists():
                     feedback = models.Feedback.objects.create(job=job,
@@ -167,5 +162,4 @@ def import_document_processor(document, file_type):
                     # Should probably check to make sure that
                     # we are not pulling more than one here
                     feedback = feedback.first()
-                print("CREATED FEEDBACK")
     return True

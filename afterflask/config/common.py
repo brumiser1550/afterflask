@@ -69,7 +69,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # ------------------------------------------------------------------------------
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#admins
 ADMINS = (
-    ("""Zac Miller""", 'zmiller1@gmail.com'),
+    ("""Brandon Rumiser""", 'brumiser1550@gmail.com'),
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#managers

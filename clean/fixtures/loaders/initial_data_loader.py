@@ -42,12 +42,11 @@ techs =list(set([tech for row in data[1:]
                  for tech in [row.tech_1, row.tech_2, row.tech_3, row.tech_4]
                  if tech != '']))
 
-counter = 0
 for tech in techs:
-    user = User.objects.create_user(tech, 'tech{}@tech.com'.format(counter))
+    tech_email = "{}@naturalcarecleaningservice.com".format(tech.replace(' ', '.'))
+    user = User.objects.create_user(tech, tech_email)
     user.save()
     new_tech = models.Technician(name=tech, user=user, type='4').save()
-    counter += 1
 
 levels = {
     0: "No Rating",

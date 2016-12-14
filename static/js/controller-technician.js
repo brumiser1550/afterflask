@@ -9,78 +9,73 @@ cleanApp.controller('technicianController', function ($scope, $http) {
     $scope.total = 0;
     $scope.num_levels = 0;
     $scope.totals = {};
-    $scope.feedback = {};
+    $scope.feedback = [];
     $scope.levels = [];
     $scope.technician = {};
 
-    $scope.$watch("user", function(){
-        get_technician();
-        get_levels();
-    });
+    $scope.api.levels = angular.copy($scope.api.default);
+    $scope.api.feedback = angular.copy($scope.api.default);
 
-    function get_technician() {
-        console.log('/api/v1/technicians/' + $scope.user);
+    $scope.user = window.location.pathname.split('/')[2];
+    getTechnician();
+    getFeedback($scope.api.feedback);
+
+    $scope.loadMoreFeedback = function () {
+        $scope.api.feedback.data.offset = $scope.api.feedback.data.offset + $scope.api.feedback.data.limit;
+        getFeedback($scope.api.feedback);
+    };
+
+    function getTechnician() {
         $http({
             method: 'GET',
             url: '/api/v1/technicians/' + $scope.user
         }).then(function (response) {
-            console.log(response);
             $scope.technician = response.data;
-        }, function (response, error_code) {
-            console.log(response);
-        });
-    }
-
-    function get_levels() {
-        $http({
-            method: 'GET',
-            url: '/api/v1/feedback-levels/'
-        }).then(function (response) {
-            angular.forEach(response.data, function (value, key) {
-                value.count = 0;
-                value.percent = 0;
-                $scope.levels[value.value] = value;
+            angular.forEach($scope.technician.feedback_totals, function (value, key) {
                 if (value.value > 0) {
-                    $scope.num_levels++;
+                    $scope.total += value.total;
+                }
+                if (value.value > $scope.num_levels) {
+                    $scope.num_levels = value.value;
                 }
             });
-            get_feedback();
+            angular.forEach($scope.technician.feedback_totals, function (value, key) {
+                if (value.value > 0) {
+                    // $scope.levels[value.value] = {};
+                    $scope.average_score += value.value * value.total;
+                    $scope.technician.feedback_totals[key].percent = value.total / $scope.total * 100;
+                }
+            });
+            $scope.average_score_percent = $scope.average_score / $scope.total * 25;
+            $scope.average_score = $scope.average_score / $scope.total;
+
         }, function (response, error_code) {
             console.log(response);
         });
     }
 
-    function get_feedback() {
-        console.log("do feedback");
+    function getFeedback(params) {
+        $scope.api.feedback.busy = true;
         $http({
             method: 'GET',
-            url: '/api/v1/feedback/' + $scope.user
+            url: '/api/v1/feedback/' + $scope.user,
+            params: params.data
         }).then(function (response) {
-            $scope.feedback = response.data;
-            feedback_totals();
+            // $scope.feedback = response.data.results;
+            angular.forEach(response.data.results, function (value, key) {
+                if (!$scope.containsObject(value, $scope.feedback)) {
+                    $scope.feedback.push(value);
+                }
+            });
+            $scope.api.feedback.busy = false;
+            if (response.data.next == null) {
+                $scope.api.feedback.done = true;
+            }
+            console.log($scope.feedback);
         }, function (response, error_code) {
             console.log(response);
         });
     }
 
-    function feedback_totals() {
-        console.log("do feedback totals");
-        $scope.total = 0;
-
-        angular.forEach($scope.feedback, function (value, key) {
-            if (value.level.value > 0) {
-                $scope.total++;
-            }
-            $scope.levels[value.level.value].count++;
-        });
-        angular.forEach($scope.feedback, function (value, key) {
-            if (value.level.value > 0) {
-                $scope.average_score += value.level.value;
-                $scope.levels[value.level.value].percent = $scope.levels[value.level.value].count / $scope.total * 100;
-            }
-        });
-        $scope.average_score_percent = $scope.average_score / $scope.total * 25;
-        $scope.average_score = $scope.average_score / $scope.total;
-    }
 
 });

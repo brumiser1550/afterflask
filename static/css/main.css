@@ -45,14 +45,14 @@ a {
  * Various other styles
  ****************************************************************************/
 
-section {
-    margin: 5px 0;
-}
+/*section {*/
+    /*margin: 5px 0;*/
+/*}*/
 
 /* Various other styles end */
 
 #content {
-    padding-top: 75px;
+    padding-top: 50px;
 }
 
 .nowrap {
@@ -356,6 +356,10 @@ header {
     -o-background-size: cover;
 }
 
+/* Company */
+.datepicker{
+    margin: 25px 0 5px;
+}
 /* About */
 
 .about {

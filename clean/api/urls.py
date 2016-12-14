@@ -23,4 +23,7 @@ urlpatterns = [
     url(r'^uploaded/',
         views.UploadedDataCollection.as_view(),
         name='uploaded_data_collection'),
+    url(r'^custom-feedback/$',
+        views.CustomFeedbackPost.as_view(),
+        name='custom_feedback_upload'),
 ]

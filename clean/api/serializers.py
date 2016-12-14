@@ -61,9 +61,12 @@ class TechnicianSerializer(serializers.ModelSerializer):
     def get_feedback_totals(self, obj):
         tech_feedback = models.Feedback.objects.filter(tech=obj)
         feedback = tech_feedback.values("tech",
-                                        "level__title").annotate(Count("level__value")).order_by()
+                                        "level__title",
+                                        "level__value").annotate(Count("level__value")).order_by()
         return [{'title': x['level__title'],
-                 'total': x['level__value__count']} for x in feedback]
+                 'total': x['level__value__count'],
+                 'value': x['level__value'],
+                 } for x in feedback]
 
     def get_all_time_gold(self, obj):
         # What should the result be if null, 0?  Same issue in week scores.

@@ -130,6 +130,8 @@ class CustomFeedbackPost(APIView):
         scheduled = request.data.get('scheduled', None)
         if not scheduled:
             scheduled = datetime.today()
+        else:
+            scheduled = datetime.strptime(scheduled, '%m/%d/%Y')
         level = int(request.data.get('level', 0))
         title = levels[level]
         feedback_score = models.FeedbackLevel.objects.filter(value=level).first()

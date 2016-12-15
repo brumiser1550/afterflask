@@ -154,18 +154,22 @@ class CustomFeedbackPost(APIView):
         contact.address = address
         contact.save()
 
-        job = models.Job(job_id=job_id,
-                         scheduled=scheduled,
-                         completed=scheduled,
-                         contact=contact)
+        job = models.Job.objects.filter(job_id=job_id).first()
+        if not job:
+            job = models.Job(job_id=job_id)
+        job.scheduled = scheduled
+        job.completed = scheduled
+        job.contact = contact
         job.save()
 
-        new_feedback = models.Feedback(job=job,
-                                       level=feedback_score,
-                                       message=message)
-        new_feedback.save()
+        feedback = models.Feedback.objects.filter(job=job, tech__isnull=True).first()
+        if not feedback:
+            feedback = models.Feedback(job=job)
+        feedback.level = feedback_score
+        feedback.message = message
+        feedback.save()
 
-        job.company_feedback = new_feedback
+        job.company_feedback = feedback
         job.save()
 
         for tech_name in [tech1, tech2, tech3, tech4]:
@@ -174,13 +178,16 @@ class CustomFeedbackPost(APIView):
                 if not tech:
                     user = User.objects.filter(username=tech_name).first()
                     if not user:
-                        user = User.objects.create_user(tech_name, '{}@naturalccs.com'.format(tech_name.replace(" ", ".")))
+                        user = User.objects.create_user(tech_name,
+                                                        '{}@naturalccs.com'.format(tech_name.replace(" ", ".")))
                         user.save()
                     tech = models.Technician(name=tech_name, user=user, type='4')
                     tech.save()
-                new_feedback = models.Feedback(job=job,
-                                               tech=tech,
-                                               level=feedback_score,
-                                               message=message).save()
+                feedback = models.Feedback.objects.filter(job=job, tech=tech).first()
+                if not feedback:
+                    feedback = models.Feedback(job=job, tech=tech)
+                feedback.level = feedback_score
+                feedback.message = message
+                feedback.save()
 
         return Response({"success": True})

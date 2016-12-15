@@ -169,11 +169,13 @@ class CustomFeedbackPost(APIView):
         job.save()
 
         for tech_name in [tech1, tech2, tech3, tech4]:
-            if tech_name:
+            if tech_name and len(tech_name) > 3:
                 tech = models.Technician.objects.filter(name=tech_name).first()
                 if not tech:
-                    user = User.objects.create_user(tech1, '{}@naturalccs.com'.format(tech_name.replace(" ", "_")))
-                    user.save()
+                    user = User.objects.filter(username=tech_name).first()
+                    if not user:
+                        user = User.objects.create_user(tech_name, '{}@naturalccs.com'.format(tech_name.replace(" ", ".")))
+                        user.save()
                     tech = models.Technician(name=tech_name, user=user, type='4')
                     tech.save()
                 new_feedback = models.Feedback(job=job,

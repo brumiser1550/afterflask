@@ -1,6 +1,6 @@
 from django.db import models, transaction, IntegrityError
 from django.contrib.auth.models import User
-from .validators import import_document_validator, import_document_processor
+# from .validators import import_document_validator, import_document_processor
 
 class Technician(models.Model):
     TYPES = (
@@ -21,7 +21,7 @@ class Technician(models.Model):
 class Contact(models.Model):
     name_first = models.CharField(max_length=60, null=True, blank=True)
     name_last = models.CharField(max_length=60, null=True, blank=True )
-    phone = models.CharField(max_length=12, null=True, blank=True)
+    phone = models.CharField(max_length=25, null=True, blank=True)
     address = models.TextField(max_length=240, null=True, blank=True)
     email = models.EmailField(null=True, blank=True, unique=True)
     contact_id = models.IntegerField(null=True, blank=True)

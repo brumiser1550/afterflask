@@ -26,7 +26,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name_first', models.CharField(max_length=60, null=True, blank=True)),
                 ('name_last', models.CharField(max_length=60, null=True, blank=True)),
-                ('phone', models.CharField(max_length=12, null=True, blank=True)),
+                ('phone', models.CharField(max_length=25, null=True, blank=True)),
                 ('address', models.TextField(max_length=240, null=True, blank=True)),
                 ('email', models.EmailField(max_length=254, null=True, blank=True)),
                 ('contact_id', models.IntegerField())
